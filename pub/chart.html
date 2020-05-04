@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+
+<title>GFS Chart</title>
+
+<script>
+////////// SCRIPT BEGIN //////////
+const TODAY = new Date();
+const VERSION = TODAY.getFullYear() +"."+ (TODAY.getMonth()+1) +"."+ TODAY.getDate();
+const BASE = "./chart";
+const CHART = ["Surface_HILO_Symbol","850hPa_Temperature_Advection","700hPa_RELH_Winds","500hPa_HGHT_Winds","300hPa_HGHT_Winds"];
+const DELTA = 3;
+const CYCLE = 24*7;
+var alt = 0;
+var seq = 0;
+function _lift(h) {
+  alt = (alt + h + CHART.length) % CHART.length;
+  url = BASE +"/"+ CHART[alt]  +"_"+ ('000'+seq).slice(-3) + ".png";
+  txt = CHART[alt] +"+"+ ('000'+seq).slice(-3) + "h";
+  document.getElementById("chart").src = url +"?v="+VERSION;
+  document.getElementById("name").innerHTML = txt;
+  return false;
+};
+function _next(h) {
+  seq = (seq + DELTA*h + CYCLE) % CYCLE;
+  url = BASE +"/"+ CHART[alt]  +"_"+ ('000'+seq).slice(-3) + ".png";
+  txt = CHART[alt] +"+"+ ('000'+seq).slice(-3) + "h";
+  document.getElementById("chart").src = url +"?v="+VERSION;
+  document.getElementById("name").innerHTML = txt;
+  return false;
+};
+////////// SCRIPT END //////////
+</script>
+
+<style type="text/css">
+main { text-align: center; }
+button { border-style: none; font-weight: bold; width: 80px; }
+div.text1 { position: relative; z-index: 1; }
+div.plot { position: relative; z-index: -1; margin-top:-10%; }
+div.text2 { position: relative; z-index: 1; margin-top:-15%; }
+</style>
+
+</head>
+<body>
+<main>
+
+<div class="text1">
+<button onclick="_lift(-1);">下層</button>
+<button onclick="_next(-8);">24h前</button>
+<button onclick="_next(8);">24h後</button>
+<button onclick="_lift(1);">上層</button>
+<div id="name">Surface_HILO_Symbol+000h</div>
+</div>
+
+<div class="plot">
+<img id="chart" src="./chart/Surface_HILO_Symbol_000.png" width="100%" height="auto">
+</div>
+
+<div class="text2">
+<button onclick="_lift(-1);">下層</button>
+<button onclick="_next(-1);">3h前</button>
+<button onclick="_next(1);">3h後</button>
+<button onclick="_lift(1);">上層</button>
+</div>
+
+</main>
+</body>
+</html>
+

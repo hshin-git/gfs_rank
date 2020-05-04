@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+
+<title>GFS Rank</title>
+
+<script src="./imakoko.js"></script>
+<script type="text/javascript">
+////////// SCRIPT BEGIN //////////
+const TODAY = new Date();
+const VERSION = TODAY.getFullYear() +"."+ (TODAY.getMonth()+1) +"."+ TODAY.getDate() +"."+ TODAY.getHours();
+function tabClick(url) {
+  const e = document.getElementById("tabNode");
+  if (e) { e.src = url +"?v="+ VERSION; };
+};
+function iframeResize() {
+  const e = document.getElementById("tabNode");
+  if (e) {
+    e.width = window.innerWidth - 10;
+    e.height = window.innerHeight - 160;
+  }
+};
+window.onload = iframeResize;
+window.onresize = iframeResize;
+////////// SCRIPT END //////////
+</script>
+
+<style type="text/css">
+body { text-align: center; }
+button { border-style: none; font-weight: bold; width: 80px; }
+.tabBody iframe {
+  position: relative;
+  border: 0;
+/*
+  width: 100%;
+  height: 800px; */
+  margin: 0;
+  padding: 0;
+}
+</style>
+
+</head>
+<body>
+
+<div id="tabArea">
+<button onclick="tabClick('./readme.html')">ホーム</button>
+<button onclick="tabClick('./chart.html')">天気図</button>
+<button onclick="tabClick('./info/sdp_week.html')">地点予報</button>
+<!-- <button onclick="tabClick('./info/sdp_news.html')">地点詳細</button> -->
+<button onclick="tabClick('./info/var_rank.html')">注目変数</button>
+<button onclick="tabClick('./info/day_rank.html')">注目日付</button>
+<button onclick="tabClick('./info/sdp_rank.html')">注目地点</button>
+<button onclick="tabClick('./info/sdp_list.html')">地点表</button>
+<button onclick="tabClick('./info/gfs_list.html')">変数表</button>
+<button onclick="imaKoko('tabNode')">イマココ</button>
+</div>
+
+<hr>
+
+<div class="tabBody">
+<body><iframe id="tabNode" src="./readme.html"></iframe></body>
+</div>
+
+<hr>
+
+<a href="https://aws.amazon.com/what-is-cloud-computing"><img src="https://d0.awsstatic.com/logos/powered-by-aws.png" alt="Powered by AWS Cloud Computing"></a>
+
+</body>
+</html>
+
