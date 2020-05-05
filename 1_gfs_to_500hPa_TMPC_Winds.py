@@ -15,6 +15,8 @@ import matplotlib as mpl
 mpl.use('Agg')
 import os,sys
 from datetime import timedelta
+import COMMON as COM
+
 ## コマンドライン引数: 時間コマ
 GFS_PATH = "./gfs/gfs_2020042312_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv) > 1 else GFS_PATH
@@ -22,11 +24,12 @@ t = 0
 t = int(sys.argv[2]) if len(sys.argv) > 2 else t
 
 ## GFSデータの空間範囲: 経度と緯度
-WEST,EAST,SOUTH,NORTH = 115,155,20+5,50
+WEST,EAST,SOUTH,NORTH = COM.AREA	#115,155,20+5,50
 
 ## 出力ファイル名
+os.makedirs(COM.CHRT_PATH, exist_ok=True)
 SCR_NAME = os.path.basename(sys.argv[0]).split('.')[0]
-OUT_PATH = "./chart/%s_%03d.png"%(SCR_NAME[9:],t*3)
+OUT_PATH = "%s/%s_%03d.png"%(COM.CHRT_PATH,SCR_NAME[9:],t*3)
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
@@ -40,6 +43,7 @@ from metpy.units import units
 import numpy as np
 import xarray as xr
 import scipy.ndimage as ndimage
+plt.style.use(COM.MPLSTYLE)
 
 
 ######################################################################
@@ -128,7 +132,7 @@ mapcrs = ccrs.LambertConformal(central_longitude=(WEST+EAST)/2, central_latitude
 datacrs = ccrs.PlateCarree()
 
 # Start figure and set extent to be over CONUS
-fig = plt.figure(1, figsize=(14, 12))
+fig = plt.figure(1, figsize=COM.FIGSIZE)
 ax = plt.subplot(111, projection=mapcrs)
 """
 ax.set_extent([-130, -72, 20, 55], ccrs.PlateCarree())
@@ -146,15 +150,16 @@ ax.add_feature(cfeature.STATES.with_scale('50m'))
 #cf = ax.contourf(lons, lats, tmpc_850, clevs_850_tmpc, cmap=plt.cm.Blues_r, transform=datacrs)
 clevs_850_tmpc = np.arange(-24-24, 24-24+1, 3)
 cf = ax.contourf(lons, lats, tmpc_850, clevs_850_tmpc, cmap=plt.cm.coolwarm, transform=datacrs)
-cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50)
+cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
 cb.set_label('Temperature (C)')
-csf = ax.contour(lons, lats, tmpc_850, clevs_850_tmpc, colors='grey',
+csf = ax.contour(lons, lats, tmpc_850, clevs_850_tmpc, colors='grey',linewidths=COM.LINEWIDTH,
                  linestyles='dashed', transform=datacrs)
 plt.clabel(csf, fmt='%d')
 
 # Plot contours of 850-hPa geopotential heights in meters
 clevs_850_hght = np.arange(0, 8000, 60)
-cs = ax.contour(lons, lats, hght_850, clevs_850_hght, colors='black', transform=datacrs)
+cs = ax.contour(lons, lats, hght_850, clevs_850_hght, colors='black', linewidths=COM.LINEWIDTH,
+	transform=datacrs)
 plt.clabel(cs, fmt='%d')
 
 # Plot wind barbs every fifth element
@@ -165,12 +170,15 @@ ax.barbs(lons[wind_slice[0]], lats[wind_slice[1]],
          pivot='middle', color='black', transform=datacrs)
 
 # Add some titles
+"""
 plt.title('GFS 500-hPa Geopotential Heights (m), Temperature (C), '
           'and Wind Barbs (kt)', loc='left')
 plt.title('Valid Time: JST {}'.format(vtime+timedelta(hours=9)), loc='right')
-
-#plt.show()
-plt.savefig(OUT_PATH)#, bbox_inches='tight')
+plt.show()
+"""
+plt.title('GFS 500-hPa Heights (m), Temp. (C) and Wind Barbs (kt)', loc='left',fontsize=COM.FONTSIZE)
+plt.title('JST {}'.format(vtime+timedelta(hours=9)), loc='right',fontsize=COM.FONTSIZE)
+plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
 ds.close()

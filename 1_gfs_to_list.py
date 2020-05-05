@@ -5,17 +5,21 @@
 import numpy as np
 import pandas as pd
 import xarray as xr
-import sys,datetime
+import os,sys,datetime
+import COMMON as COM
+
 
 ###########################################
 ## コマンドライン引数: GFSファイル指定
 GFS_PATH = "./gfs/gfs_2020042012_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv)>1 else GFS_PATH
-OUT_PATH = "./info"
+OUT_PATH = COM.INFO_PATH	#"./info"
 ##
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
+os.makedirs(OUT_PATH, exist_ok=True)
+
 
 ###########################################
 ## GFSファイルの参照開始

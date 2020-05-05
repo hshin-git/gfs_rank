@@ -17,6 +17,8 @@ import matplotlib as mpl
 mpl.use('Agg')
 import os,sys
 from datetime import timedelta
+import COMMON as COM
+
 ## コマンドライン引数: 時間コマ
 GFS_PATH = "./gfs/gfs_2020042312_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv) > 1 else GFS_PATH
@@ -24,11 +26,12 @@ t = 0
 t = int(sys.argv[2]) if len(sys.argv) > 2 else t
 
 ## GFSデータの空間範囲: 経度と緯度
-WEST,EAST,SOUTH,NORTH = 115,155,20+5,50-2
+WEST,EAST,SOUTH,NORTH = COM.AREA	#115,155,20+5,50
 
 ## 出力ファイル名
+os.makedirs(COM.CHRT_PATH, exist_ok=True)
 SCR_NAME = os.path.basename(sys.argv[0]).split('.')[0]
-OUT_PATH = "./chart/%s_%03d.png"%(SCR_NAME[9:],t*3)
+OUT_PATH = "%s/%s_%03d.png"%(COM.CHRT_PATH,SCR_NAME[9:],t*3)
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
@@ -126,7 +129,7 @@ heights_500 = ndimage.gaussian_filter(heights_500, sigma=1.5, order=0)
 #sys.exit(0)
 ###########################################
 # Create the figure and plot background on different axes
-fig, axarr = plt.subplots(nrows=2, ncols=2, figsize=(16, 10), #constrained_layout=True,
+fig, axarr = plt.subplots(nrows=2, ncols=2, figsize=COM.FIGSIZE, #constrained_layout=True,
                           subplot_kw={'projection': crs})
 #add_metpy_logo(fig, 140, 120, size='large')
 axlist = axarr.flatten()
@@ -171,11 +174,11 @@ fig.set_constrained_layout_pads(w_pad=0., h_pad=0., hspace=0., wspace=0.)
 
 # Set figure title
 #fig.suptitle(ds['time'][t].dt.strftime('%Y-%m-%d %H:%MZ').values, fontsize=16)
-fig.suptitle('GFS Forcast for JST {}'.format(vtime+timedelta(hours=9)) + ' at UTC {}'.format(rtime), fontsize=16)
+fig.suptitle('GFS Forecast for JST {}'.format(vtime+timedelta(hours=9)) + ' at UTC {}'.format(rtime), fontsize=COM.FONTSIZE)
 
 # Display the plot
 #plt.show()
-plt.savefig(OUT_PATH, bbox_inches='tight')
+plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
 ds.close()

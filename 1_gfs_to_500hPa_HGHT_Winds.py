@@ -15,6 +15,8 @@ import matplotlib as mpl
 mpl.use('Agg')
 import os,sys
 from datetime import timedelta
+import COMMON as COM
+
 ## コマンドライン引数: 時間コマ
 GFS_PATH = "./gfs/gfs_2020042312_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv) > 1 else GFS_PATH
@@ -22,11 +24,12 @@ t = 0
 t = int(sys.argv[2]) if len(sys.argv) > 2 else t
 
 ## GFSデータの空間範囲: 経度と緯度
-WEST,EAST,SOUTH,NORTH = 115,155,20+5,50
+WEST,EAST,SOUTH,NORTH = COM.AREA	#115,155,20+5,50
 
 ## 出力ファイル名
+os.makedirs(COM.CHRT_PATH, exist_ok=True)
 SCR_NAME = os.path.basename(sys.argv[0]).split('.')[0]
-OUT_PATH = "./chart/%s_%03d.png"%(SCR_NAME[9:],t*3)
+OUT_PATH = "%s/%s_%03d.png"%(COM.CHRT_PATH,SCR_NAME[9:],t*3)
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
@@ -46,6 +49,7 @@ from metpy.units import units
 import numpy as np
 from scipy.ndimage import gaussian_filter
 import xarray as xr
+plt.style.use(COM.MPLSTYLE)
 
 
 ######################################################################
@@ -132,7 +136,7 @@ mapcrs = ccrs.LambertConformal(central_longitude=(WEST+EAST)/2, central_latitude
 datacrs = ccrs.PlateCarree()
 
 # Start the figure and create plot axes with proper projection
-fig = plt.figure(1, figsize=(14, 12))
+fig = plt.figure(1, figsize=COM.FIGSIZE)
 ax = plt.subplot(111, projection=mapcrs)
 """
 ax.set_extent([-130, -72, 20, 55], ccrs.PlateCarree())
@@ -149,35 +153,39 @@ ax.add_feature(cfeature.STATES.with_scale('50m'))
 clevs_500_sped = np.arange(40, 140+1, 20)
 cf = ax.contourf(lons, lats, sped_500, clevs_500_sped, cmap=plt.cm.GnBu,
 	transform=datacrs)
-cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50)
+cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
 cb.set_label('Wind Speed (kt)')
 
 # Plot 500-hPa Geopotential Heights in meters
 clevs_500_hght = np.arange(0, 8000, 60)
-cs = ax.contour(lons, lats, hght_500, clevs_500_hght, colors='black', linewidths=2,
+cs = ax.contour(lons, lats, hght_500, clevs_500_hght, colors='black', linewidths=COM.LINEWIDTH,
                 transform=datacrs)
-plt.clabel(cs, fmt='%d', fontsize=16)
+plt.clabel(cs, fmt='%d', fontsize=COM.FONTSIZE)
 
 # Plot 500-hPa Temperature in degC
 clevs_500_temp = np.arange(-60, 60, 3)
-cs = ax.contour(lons, lats, tmpk_500-273.15, clevs_500_temp, colors='tab:red', linewidths=2,
+cs = ax.contour(lons, lats, tmpk_500-273.15, clevs_500_temp, colors='tab:red', linewidths=COM.LINEWIDTH,
                 transform=datacrs)
-plt.clabel(cs, fmt='%d', fontsize=16)
+plt.clabel(cs, fmt='%d', fontsize=COM.FONTSIZE)
 
 # Plot 500-hPa wind barbs in knots, regrid to reduce number of barbs
 ax.barbs(lons, lats, uwnd_500.to('kt').m, vwnd_500.to('kt').m, pivot='middle',
          color='grey', regrid_shape=20, transform=datacrs)
 
 # Make some nice titles for the plot (one right, one left)
+"""
 plt.title('GFS 500-hPa Geopotential Heights (m), Wind Speed (kt),'
           ' and Temperature (C)', loc='left')
 plt.title('Valid Time: JST {}'.format(vtime+timedelta(hours=9)), loc='right')
+"""
+plt.title('GFS 500-hPa Heights (m), Wind Speed (kt), and Temp. (C)', loc='left',fontsize=COM.FONTSIZE)
+plt.title('JST {}'.format(vtime+timedelta(hours=9)), loc='right',fontsize=COM.FONTSIZE)
 
 # Adjust image and show
 #plt.subplots_adjust(bottom=0, top=1)
 
 #plt.show()
-plt.savefig(OUT_PATH)#, bbox_inches='tight')
+plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
 ds.close()

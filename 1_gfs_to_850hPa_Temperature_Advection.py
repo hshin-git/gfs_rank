@@ -15,6 +15,8 @@ mpl.use('Agg')
 import os,sys
 from datetime import timedelta
 import netCDF4
+import COMMON as COM
+
 ## コマンドライン引数: 時間コマ
 GFS_PATH = "./gfs/gfs_2020042312_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv) > 1 else GFS_PATH
@@ -22,11 +24,12 @@ t = 0
 t = int(sys.argv[2]) if len(sys.argv) > 2 else t
 
 ## GFSデータの空間範囲: 経度と緯度
-WEST,EAST,SOUTH,NORTH = 115,155,20+5,50
+WEST,EAST,SOUTH,NORTH = COM.AREA	#115,155,20+5,50
 
 ## 出力ファイル名
+os.makedirs(COM.CHRT_PATH, exist_ok=True)
 SCR_NAME = os.path.basename(sys.argv[0]).split('.')[0]
-OUT_PATH = "./chart/%s_%03d.png"%(SCR_NAME[9:],t*3)
+OUT_PATH = "%s/%s_%03d.png"%(COM.CHRT_PATH,SCR_NAME[9:],t*3)
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
@@ -46,6 +49,7 @@ from netCDF4 import num2date
 import numpy as np
 import scipy.ndimage as ndimage
 from siphon.ncss import NCSS
+plt.style.use(COM.MPLSTYLE)
 
 
 #################################
@@ -159,7 +163,7 @@ ax = plt.subplot(gs[0], projection=plotcrs)
 plt.title('850mb GFS Temperature Advection for {0:%d %B %Y %H:%MZ}'.format(time), fontsize=16)
 ax.set_extent([235., 290., 20., 55.])
 """
-fig = plt.figure(1, figsize=(14, 12))
+fig = plt.figure(1, figsize=COM.FIGSIZE)
 ax = plt.subplot(111, projection=plotcrs)
 #plt.title('850mb GFS Temperature Advection for JST {}'.format(time+timedelta(hours=9)), fontsize=16)
 ax.set_extent([WEST, EAST, SOUTH, NORTH], ccrs.PlateCarree())
@@ -176,10 +180,10 @@ ax.add_feature(cfeature.STATES.with_scale('50m'))
 
 # Plot Height Contours
 clev850 = np.arange(900, 3000, 30)
-cs = ax.contour(lon_2d, lat_2d, Z_850, clev850, colors='black', linewidths=2,
+cs = ax.contour(lon_2d, lat_2d, Z_850, clev850, colors='black', linewidths=COM.LINEWIDTH,
                 linestyles='solid', transform=datacrs)
-plt.clabel(cs, fontsize=16, inline=2, inline_spacing=10, fmt='%i',
-           rightside_up=True, use_clabeltext=True)
+plt.clabel(cs, fontsize=COM.FONTSIZE,
+	inline=2, inline_spacing=10, fmt='%i', rightside_up=True, use_clabeltext=True)
 
 # Plot Temperature Contours
 clevtemp850 = np.arange(-30, 30, 3)
@@ -188,11 +192,11 @@ cs2 = ax.contour(lon_2d, lat_2d,
 		temp_850 - 273.15,
 		clevtemp850,
 		colors='tab:red',
-		linewidths=2,
+		linewidths=COM.LINEWIDTH,
 		linestyles='dashed',
                  transform=datacrs)
-plt.clabel(cs2, fontsize=16, inline=1, inline_spacing=10, fmt='%i',
-           rightside_up=True, use_clabeltext=True)
+plt.clabel(cs2, fontsize=COM.FONTSIZE,
+	inline=1, inline_spacing=10, fmt='%i', rightside_up=True, use_clabeltext=True)
 
 # Plot Colorfill of Temperature Advection
 cint = np.arange(-9, 9+1,1)
@@ -205,7 +209,7 @@ cf = ax.contourf(lon_2d, lat_2d,
 #cax = plt.subplot(gs[1])
 #cb = plt.colorbar(cf, cax=cax, orientation='horizontal', extendrect=True, ticks=cint)
 #cb.set_label(r'$^{o}C/3h$', size='large')
-cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50)
+cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
 cb.set_label(r'Temperature Advection ($^{o}C/3h$)')
 
 # Plot Wind Barbs
@@ -219,11 +223,13 @@ ax.barbs(lon_2d, lat_2d, u_wind_850*KT, v_wind_850*KT, color='grey',
          length=6, regrid_shape=20, pivot='middle', transform=datacrs)
 
 # Add some useful titles
-plt.title('GFS 850-hPa Geopotential Heights (m), Temperature(C), and Temperature Advection', loc='left')
-plt.title('Valid Time: JST {}'.format(time+timedelta(hours=9)), loc='right')
+#plt.title('GFS 850-hPa Geopotential Heights (m), Temperature(C), and Temperature Advection', loc='left')
+#plt.title('Valid Time: JST {}'.format(time+timedelta(hours=9)), loc='right')
+plt.title('GFS 850-hPa Geopotential Heights (m), Temperature (C)', loc='left',fontsize=COM.FONTSIZE)
+plt.title('JST {}'.format(time+timedelta(hours=9)), loc='right',fontsize=COM.FONTSIZE)
 
 #plt.show()
-plt.savefig(OUT_PATH)#, bbox_inches='tight')
+plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
 data.close()

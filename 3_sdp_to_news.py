@@ -3,26 +3,29 @@ import numpy  as np
 import pandas as pd
 import scipy.stats as stats
 #import matplotlib.pyplot as plt
-import sys
+import os,sys
+import COMMON as COM
 
 ########################################################
 ## SDPリスト地点のCSVファイルからカテゴリ予報を作成する
 ########################################################
 ## 抽出地点と気象変数の指定
 ENCODE = "cp932"
-SDP_LIST = pd.read_csv("./info/sdp_list.csv",index_col="SDP",encoding=ENCODE)
+SDP_LIST = pd.read_csv(COM.INFO_PATH +"/"+ "sdp_list.csv",index_col="SDP",encoding=ENCODE)
 
 ## カテゴリ予報の入力
 # 以下のSTAT,DATA
-STAT_PATH = "./hindcast"
-DATA_PATH = "./forecast"
+STAT_PATH = COM.HCST_PATH	#"./hindcast"
+DATA_PATH = COM.FCST_PATH	#"./forecast"
 
 ## カテゴリ予報の出力先
-OUT_PATH = "./info"
+OUT_PATH = COM.INFO_PATH	#"./info"
 print("argv:",sys.argv)
 print("in1:",STAT_PATH)
 print("in2:",DATA_PATH)
 print("out:",OUT_PATH)
+os.makedirs(OUT_PATH, exist_ok=True)
+
 
 ########################################################
 ## カテゴリ予報の対象変数

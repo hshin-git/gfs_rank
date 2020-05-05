@@ -10,6 +10,9 @@ from datetime import datetime,timedelta
 import netCDF4
 from netCDF4 import num2date
 
+import COMMON as COM
+
+
 ###########################################
 print("argv:",sys.argv)
 FORECAST = True if len(sys.argv) < 3 else False
@@ -22,7 +25,10 @@ JST2 = JST1 + timedelta(days=7)
 JST2 = datetime.strptime(sys.argv[2][:8],"%Y%m%d") + timedelta(days=1) if len(sys.argv) > 2 else JST2
 
 ## コマンドライン引数の数により保存先を切り替え
-OUT_PATH = "./forecast" if FORECAST else "./hindcast"
+#OUT_PATH = "./forecast" if FORECAST else "./hindcast"
+OUT_PATH = COM.FCST_PATH if FORECAST else COM.HCST_PATH
+os.makedirs(OUT_PATH, exist_ok=True)
+
 
 ###########################################
 ## GFSファイルの列挙

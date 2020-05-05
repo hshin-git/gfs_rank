@@ -5,19 +5,24 @@ mpl.use('Agg')
 import numpy  as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import sys
+import os,sys
+import COMMON as COM
+plt.style.use(COM.MPLSTYLE)
+
 
 ########################################################
 ## GFSファイルからSDPリスト地点の気象量を抽出してCSV保存する
 ########################################################
 ## コマンドライン引数: SDPリスト
 SDP_PLOT = sys.argv[1:]
-CSV_PATH = "./forecast"
-OUT_PATH = "./graph"
+CSV_PATH = COM.FCST_PATH	#"./forecast"
+OUT_PATH = COM.PLOT_PATH	#"./graph"
 
 print("argv:",sys.argv)
 print("csv:",CSV_PATH)
 print("out:",OUT_PATH)
+os.makedirs(OUT_PATH, exist_ok=True)
+
 
 ########################################################
 ## 抽出地点と気象変数の指定
@@ -120,8 +125,8 @@ for SDP in SDP_PLOT:
   #axes[row].set_ylim(-2,2)
   ########################################################
   ## PNG保存
-  plt.savefig(OUT_PATH +"/"+ "%05d.png"%SDP)#, bbox_inches='tight')
-  #plt.savefig(OUT_PATH +"/"+ "%05d.svg"%SDP)#, bbox_inches='tight')
+  plt.savefig(OUT_PATH +"/"+ "%05d.png"%SDP)#, transparent=COM.TRANSPARENT)
+  #plt.savefig(OUT_PATH +"/"+ "%05d.svg"%SDP)
   plt.close(fig)
   ## CSV保存: イマココ用
   #DF = DF[["TMP","DPT","SWD","LWD","CRAIN","CSNOW","CICEP","TCDC","VIS","GUST"]]

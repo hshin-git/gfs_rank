@@ -2,16 +2,18 @@
 import numpy  as np
 import pandas as pd
 #import matplotlib.pyplot as plt
-import sys
+import os,sys
+import COMMON as COM
 
 ##################################################
 ## 気象庁アメダス一覧
 JMA_LIST = sys.argv[1] if len(sys.argv)>1 else "./conf/ame_master.csv"
-OUT_PATH = "./info"
+OUT_PATH = COM.INFO_PATH	#"./info"
 ##
 print("argv:",sys.argv)
 print("ame:",JMA_LIST)
 print("out:",OUT_PATH)
+os.makedirs(OUT_PATH, exist_ok=True)
 
 ##################################################
 ENCODE = "cp932"

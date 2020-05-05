@@ -4,6 +4,8 @@ import pandas as pd
 #import matplotlib.pyplot as plt
 import os,sys
 from datetime import datetime
+import COMMON as COM
+
 
 ##################################################
 CSV_LIST = sys.argv[1:]
@@ -95,7 +97,7 @@ FORMATTERS = {
 }
 
 ## 出力時の長さ制限なし
-pd.set_option('display.max_colwidth', None)
+pd.set_option('display.max_colwidth', -1)
 
 ##################################################
 for src in CSV_LIST:

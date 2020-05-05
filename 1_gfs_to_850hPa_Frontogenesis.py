@@ -16,6 +16,8 @@ import matplotlib as mpl
 mpl.use('Agg')
 import os,sys
 from datetime import timedelta
+#import netCDF4
+import COMMON as COM
 
 ## コマンドライン引数: 時間コマ
 GFS_PATH = "./gfs/gfs_2020042312_168.nc"
@@ -24,11 +26,12 @@ t = 0
 t = int(sys.argv[2]) if len(sys.argv) > 2 else t
 
 ## GFSデータの空間範囲: 経度と緯度
-WEST,EAST,SOUTH,NORTH = 115,155,20+5,50
+WEST,EAST,SOUTH,NORTH = COM.AREA	#115,155,20+5,50
 
 ## 出力ファイル名
+os.makedirs(COM.CHRT_PATH, exist_ok=True)
 SCR_NAME = os.path.basename(sys.argv[0]).split('.')[0]
-OUT_PATH = "./chart/%s_%03d.png"%(SCR_NAME[9:],t*3)
+OUT_PATH = "%s/%s_%03d.png"%(COM.CHRT_PATH,SCR_NAME[9:],t*3)
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
@@ -45,6 +48,7 @@ import metpy.calc as mpcalc
 from metpy.units import units
 import numpy as np
 import xarray as xr
+plt.style.use(COM.MPLSTYLE)
 
 
 ######################################################################
@@ -147,7 +151,7 @@ mapcrs = ccrs.LambertConformal(central_longitude=(WEST+EAST)/2, central_latitude
 datacrs = ccrs.PlateCarree()
 
 # Start figure and limit the graphical area extent
-fig = plt.figure(1, figsize=(14, 12))
+fig = plt.figure(1, figsize=COM.FIGSIZE)
 ax = fig.add_subplot(111, projection=mapcrs)
 ax.set_extent([WEST, EAST, SOUTH, NORTH], ccrs.PlateCarree())
 ax.set_xmargin(0)
@@ -160,18 +164,19 @@ ax.add_feature(cfeature.STATES.with_scale('50m'))
 # Plot 850-hPa Frontogenesis
 cf = ax.contourf(lons, lats, fronto_850*convert_to_per_100km_3h, np.arange(-8, 8.5, 0.5),
                  cmap=plt.cm.bwr, extend='both', transform=datacrs)
-cb = plt.colorbar(cf, ax=ax, orientation='horizontal', pad=0, aspect=50, extendrect=True)
+cb = plt.colorbar(cf, ax=ax, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
 cb.set_label('Frontogenesis (K/100km/3h)')
 
 # Plot 850-hPa Temperature in Celsius
 clevs_tmpc = np.arange(-42, 42+1, 3)
-csf = ax.contour(lons, lats, tmpc_850, clevs_tmpc, colors='deepskyblue',
+csf = ax.contour(lons, lats, tmpc_850, clevs_tmpc, colors='tab:red',linewidths=COM.LINEWIDTH,
                  linestyles='dashed', transform=datacrs)
 plt.clabel(csf, fmt='%d')
 
 # Plot 850-hPa Geopotential Heights
 clevs_850_hght = np.arange(0, 8000, 30)
-cs = ax.contour(lons, lats, hght_850, clevs_850_hght, colors='black', transform=datacrs)
+cs = ax.contour(lons, lats, hght_850, clevs_850_hght, colors='black', linewidths=COM.LINEWIDTH,
+		transform=datacrs)
 plt.clabel(cs, fmt='%d')
 
 # Plot 850-hPa Wind Barbs only plotting every fifth barb
@@ -181,11 +186,14 @@ ax.barbs(lons[wind_slice[0]], lats[wind_slice[1]],
          color='black', transform=datacrs)
 
 # Plot some titles
+"""
 plt.title('GFS 850-hPa Geopotential Heights (m), Temp (C), and Winds', loc='left')
 plt.title('Valid Time: JST {}'.format(vtime+timedelta(hours=9)), loc='right')
-
-#plt.show()
-plt.savefig(OUT_PATH)#, bbox_inches='tight')
+plt.show()
+"""
+plt.title('GFS 850-hPa Heights (m), Temp (C), and Winds', loc='left', fontsize=COM.FONTSIZE)
+plt.title('JST {}'.format(vtime+timedelta(hours=9)), loc='right', fontsize=COM.FONTSIZE)
+plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
 ds.close()

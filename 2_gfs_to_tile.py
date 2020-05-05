@@ -20,6 +20,9 @@ from cartopy.mpl.ticker import LatitudeFormatter,LongitudeFormatter
 import netCDF4
 from netCDF4 import num2date
 
+import COMMON as COM
+
+
 ###########################################
 ## コマンドライン引数: 入力ファイル、出力日数
 GFS_PATH = "./gfs/gfs_2020042012_168.nc"
@@ -29,10 +32,11 @@ VAR_LIST = ["Visibility_surface"]
 VAR_LIST = sys.argv[2:] if len(sys.argv)>2 else VAR_LIST
 
 ## ファイル出力場所
-OUT_PATH = "./tile"
+OUT_PATH = COM.TILE_PATH	#"./tile"
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
+os.makedirs(OUT_PATH, exist_ok=True)
 
 
 ###########################################
@@ -131,10 +135,8 @@ for NAME in VAR_LIST:
       DATA_ = data_vals[:,:,:] if DIMS==3 else data_vals[:,z,:,:]
 
       # 画像ファイル名
-      PNG_ROOT = OUT_PATH #+ "/" + INIT
-      os.makedirs(PNG_ROOT, exist_ok=True)
-      #PNG_PATH = PNG_ROOT + "/" + "%s_%02d_%s_%03d.png"%(NAME,z,INIT,t*3)
-      PNG_PATH = PNG_ROOT + "/" + "%s_%02d_%03d.png"%(NAME,z,t*3)
+      #PNG_PATH = OUT_PATH + "/" + "%s_%02d_%s_%03d.png"%(NAME,z,INIT,t*3)
+      PNG_PATH = OUT_PATH + "/" + "%s_%02d_%03d.png"%(NAME,z,t*3)
       print("plot:", JST, ABBR, z, NAME)
 
       # 表示オプション

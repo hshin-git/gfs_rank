@@ -15,6 +15,8 @@ mpl.use('Agg')
 import os,sys
 from datetime import timedelta
 import netCDF4
+import COMMON as COM
+
 ## コマンドライン引数: 時間コマ
 GFS_PATH = "./gfs/gfs_2020042312_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv) > 1 else GFS_PATH
@@ -22,11 +24,12 @@ t = 0
 t = int(sys.argv[2]) if len(sys.argv) > 2 else t
 
 ## GFSデータの空間範囲: 経度と緯度
-WEST,EAST,SOUTH,NORTH = 115,155,20+5,50
+WEST,EAST,SOUTH,NORTH = COM.AREA	#115,155,20+5,50
 
 ## 出力ファイル名
+os.makedirs(COM.CHRT_PATH, exist_ok=True)
 SCR_NAME = os.path.basename(sys.argv[0]).split('.')[0]
-OUT_PATH = "./chart/%s_%03d.png"%(SCR_NAME[9:],t*3)
+OUT_PATH = "%s/%s_%03d.png"%(COM.CHRT_PATH,SCR_NAME[9:],t*3)
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
@@ -46,6 +49,8 @@ from netCDF4 import num2date
 import numpy as np
 import scipy.ndimage as ndimage
 from siphon.ncss import NCSS
+plt.style.use(COM.MPLSTYLE)
+
 
 #######################################
 # Data Aquisition
@@ -127,16 +132,20 @@ ax = plt.subplot(gs[0], projection=plotcrs)
 plotcrs = ccrs.LambertConformal(central_longitude=(WEST+EAST)/2, central_latitude=(SOUTH+NORTH)/2,
                                standard_parallels=(30, 60))
 datacrs = ccrs.PlateCarree()
-fig = plt.figure(1, figsize=(14, 12))
+fig = plt.figure(1, figsize=COM.FIGSIZE)
 ax = plt.subplot(111, projection=plotcrs)
 ax.set_xmargin(0)
 ax.set_ymargin(0)
 
 
 # Plot Titles
+"""
 plt.title(r'GFS 500-hPa Heights (m), AVOR$*10^5$ ($s^{-1}$), AVOR Adv$*10^9$ ($s^{-2}$)',
           loc='left')
 plt.title('Valid Time: JST {}'.format(vtime[t]+timedelta(hours=9)), loc='right')
+"""
+plt.title(r'GFS 500-hPa Heights (m), AVOR$*10^5$ ($s^{-1}$), AVOR Adv$*10^9$ ($s^{-2}$)', loc='left', fontsize=COM.FONTSIZE)
+plt.title('JST {}'.format(vtime[t]+timedelta(hours=9)), loc='right', fontsize=COM.FONTSIZE)
 
 # Plot Background
 #ax.set_extent([235., 290., 20., 58.], ccrs.PlateCarree())
@@ -146,17 +155,17 @@ ax.add_feature(cfeature.STATES, linewidth=.5)
 
 # Plot Height Contours
 clev500 = np.arange(5100, 6061, 60)
-cs = ax.contour(lon, lat, hght_500, clev500, colors='black', linewidths=2.0,
+cs = ax.contour(lon, lat, hght_500, clev500, colors='black', linewidths=COM.LINEWIDTH,
                 linestyles='solid', transform=ccrs.PlateCarree())
-plt.clabel(cs, fontsize=10, inline=1, inline_spacing=10, fmt='%i',
-           rightside_up=True, use_clabeltext=True)
+plt.clabel(cs, fontsize=COM.FONTSIZE,
+	inline=1, inline_spacing=10, fmt='%i', rightside_up=True, use_clabeltext=True)
 
 # Plot Absolute Vorticity Contours
 clevvort500 = np.arange(-10, 50, 5)
-cs2 = ax.contour(lon, lat, avor*10**5, clevvort500, colors='deepskyblue',
-                 linewidths=1.5, linestyles='dashed', transform=ccrs.PlateCarree())
-plt.clabel(cs2, fontsize=10, inline=1, inline_spacing=10, fmt='%i',
-           rightside_up=True, use_clabeltext=True)
+cs2 = ax.contour(lon, lat, avor*10**5, clevvort500, colors='tab:red', linewidths=COM.LINEWIDTH,
+	linestyles='dashed', transform=ccrs.PlateCarree())
+plt.clabel(cs2, fontsize=COM.FONTSIZE,
+	inline=1, inline_spacing=10, fmt='%i', rightside_up=True, use_clabeltext=True)
 """
 clevvort500 = np.arange(0, 400+1, 40)
 cs2 = ax.contour(lon, lat, (avor-f.m)*10e5, clevvort500, colors='grey',
@@ -171,7 +180,7 @@ cf = ax.contourf(lon, lat, vort_adv.m * 1e9, clev_avoradv[clev_avoradv != 0], #e
                  cmap='bwr', transform=ccrs.PlateCarree())
 #cax = plt.subplot(gs[1])
 #cb = plt.colorbar(cf, orientation='horizontal', extendrect='True', ticks=clev_avoradv)
-cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, ticks=clev_avoradv)
+cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, ticks=clev_avoradv, shrink=COM.SHRINK)
 cb.set_label(r'Absolute Vorticity Advection ($1/s^2$)')
 
 
@@ -184,7 +193,7 @@ ax.barbs(lon, lat, uwnd_500*KT, vwnd_500*KT, pivot='middle', color='grey',
 	regrid_shape=20, transform=ccrs.PlateCarree())
 
 #plt.show()
-plt.savefig(OUT_PATH)#, bbox_inches='tight')
+plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
 ds.close()

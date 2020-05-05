@@ -11,6 +11,7 @@ from netCDF4 import num2date
 from siphon.catalog import TDSCatalog
 import xarray as xr
 
+
 ###########################################
 print("argv:",sys.argv)
 ## コマンドライン引数: 開始年月日、予報期間(日)
@@ -37,12 +38,13 @@ print("utc2:", UTC2)
 #sys.exit(0)
 
 ###########################################
+import COMMON as COM
 ## GFSデータの空間範囲: 経度と緯度
 WEST,EAST,SOUTH,NORTH = 115,155,20,50
 print("area:", WEST,EAST,SOUTH,NORTH)
 
 ## GFSデータの保存先
-OUT_PATH = "./gfs"
+OUT_PATH = COM.DATA_PATH	#"./gfs"
 GFS_YMDH = UTC1.strftime("%Y%m%d%H")
 GFS_FCST = DAYS * 24
 GFS_PATH = OUT_PATH + "/" + "gfs_%s_%03d.nc"%(GFS_YMDH,GFS_FCST)

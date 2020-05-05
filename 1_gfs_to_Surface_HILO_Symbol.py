@@ -15,6 +15,8 @@ mpl.use('Agg')
 import os,sys
 from datetime import timedelta
 import netCDF4
+import COMMON as COM
+
 ## コマンドライン引数: 時間コマ
 GFS_PATH = "./gfs/gfs_2020042312_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv) > 1 else GFS_PATH
@@ -22,11 +24,12 @@ t = 0
 t = int(sys.argv[2]) if len(sys.argv) > 2 else t
 
 ## GFSデータの空間範囲: 経度と緯度
-WEST,EAST,SOUTH,NORTH = 115,155,20+5,50
+WEST,EAST,SOUTH,NORTH = COM.AREA	#115,155,20+5,50
 
 ## 出力ファイル名
+os.makedirs(COM.CHRT_PATH, exist_ok=True)
 SCR_NAME = os.path.basename(sys.argv[0]).split('.')[0]
-OUT_PATH = "./chart/%s_%03d.png"%(SCR_NAME[9:],t*3)
+OUT_PATH = "%s/%s_%03d.png"%(COM.CHRT_PATH,SCR_NAME[9:],t*3)
 print("argv:",sys.argv)
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
@@ -45,6 +48,7 @@ from netCDF4 import num2date
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from siphon.ncss import NCSS
+plt.style.use(COM.MPLSTYLE)
 
 
 ###############################
@@ -166,8 +170,7 @@ states_provinces = cfeature.NaturalEarthFeature(
 ###############################
 # Create figure and plot data
 #fig = plt.figure(1, figsize=(17., 11.))
-fig = plt.figure(1, figsize=(14, 12))
-#fig = plt.figure(1, figsize=(12, 8))
+fig = plt.figure(1, figsize=COM.FIGSIZE)
 ax = plt.subplot(111, projection=mapproj)
 
 # Set extent and plot map lines
@@ -184,22 +187,22 @@ clevs = (np.arange(0, 5400, 60),
          np.array([5400]),
          np.arange(5460, 7000, 60))
 colors = ('tab:blue', 'grey', 'tab:red')
-kw_clabels = {'fontsize': 16, 'inline': True, 'inline_spacing': 5, 'fmt': '%i',
-              'rightside_up': True, 'use_clabeltext': True}
+kw_clabels = {'fontsize': COM.FONTSIZE,
+	'inline': True, 'inline_spacing': 5, 'fmt': '%i', 'rightside_up': True, 'use_clabeltext': True}
 for clevthick, color in zip(clevs, colors):
-    cs = ax.contour(lons, lats, thickness_1000_500, levels=clevthick, colors=color,
-                    linewidths=2, linestyles='dashed', transform=dataproj)
+    cs = ax.contour(lons, lats, thickness_1000_500, levels=clevthick, colors=color, linewidths=COM.LINEWIDTH,
+		linestyles='dashed', transform=dataproj)
     plt.clabel(cs, **kw_clabels)
 
 # Plot CRAIN
 clevs_crain = np.arange(20, 101, 20)
 cf = ax.contourf(lons, lats, crain, clevs_crain, cmap=plt.cm.Blues, transform=dataproj, norm=plt.Normalize(0, 150))
-cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50)
+cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
 cb.set_label('Categorical Rain Surface (%)')
 
 # Plot MSLP
 clevmslp = np.arange(800., 1120., 4)
-cs2 = ax.contour(lons, lats, mslp, clevmslp, colors='k', linewidths=2,
+cs2 = ax.contour(lons, lats, mslp, clevmslp, colors='k', linewidths=COM.LINEWIDTH,
                  linestyles='solid', transform=dataproj)
 plt.clabel(cs2, **kw_clabels)
 
@@ -208,12 +211,13 @@ plot_maxmin_points(lons, lats, mslp, 'max', 50, symbol='H', color='b',  transfor
 plot_maxmin_points(lons, lats, mslp, 'min', 25, symbol='L', color='r', transform=dataproj)
 
 # Put on some titles
-plt.title('GFS Surface MSLP (hPa) with Highs and Lows, 1000-500 hPa Thickness (m)', loc='left')
-plt.title('Valid Time: JST {}'.format(vtime[t]+timedelta(hours=9)), loc='right')
-"""
-plt.show()
-"""
-plt.savefig(OUT_PATH)#, bbox_inches='tight')
+#plt.title('GFS Surface MSLP (hPa) with Highs and Lows, 1000-500 hPa Thickness (m)', loc='left',fontsize=COM.FONTSIZE)
+#plt.title('Valid Time: JST {}'.format(vtime[t]+timedelta(hours=9)), loc='right',fontsize=COM.FONTSIZE)
+plt.title('GFS MSLP (hPa) with H and L, 1000-500 hPa Thickness (m)', loc='left',fontsize=COM.FONTSIZE)
+plt.title('JST {}'.format(vtime[t]+timedelta(hours=9)), loc='right', fontsize=COM.FONTSIZE)
+
+#plt.show()
+plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
 data.close()
