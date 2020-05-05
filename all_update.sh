@@ -24,7 +24,7 @@ $DEBUG $PYTHON 0_ame_to_list.py conf/ame_master.csv
 
 echo "##################################################"
 ##### GFSデータの取得: THREDD Server -> gfs/gfs_*.nc
-$DEBUG $PYTHON 0_tds_to_gfs.py $INIT
+$DEBUG $PYTHON 0_tds_to_gfs.py $GFS_INIT
 
 echo "##################################################"
 ##### GFS変数表の作成: gfs/gfs_*.nc -> info/gfs_list.csv
