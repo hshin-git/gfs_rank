@@ -1,0 +1,46 @@
+/***** index.html *****/
+body { text-align: center; font-size: 100%; }
+button { border-style: none; font-weight: bold; width: 80px; }
+.tabBody iframe {
+  position: relative;
+  border: 0;
+  margin: 0;
+  padding: 0;
+/*
+  width: 100%;
+  height: 800px; */
+}
+
+
+/***** readme.html *****/
+body#readme { text-align: left; }
+body#readme h1 { border-bottom: solid 3px #ddd; }
+
+
+/***** chart.html *****/
+div.text1 { position: relative; z-index: 1; }
+div.plot { position: relative; z-index: -1; margin-top:-5%; }
+div.text2 { position: relative; z-index: 1; margin-top:-15%; }
+
+
+/***** table.html *****/
+.dataframe a { text-decoration:none; color:blue; }
+.dataframe td { white-space: nowrap; border-bottom: 1px solid #ddd; }
+.dataframe table { border: 1 }
+/* 行ヘッダの固定 */
+.dataframe thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: #ddd;
+  z-index: 2;
+}
+/* 列ヘッダの固定 */
+.dataframe tbody th {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  background-color: #ddd;
+  z-index: 1;
+}
+

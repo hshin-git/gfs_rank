@@ -5,6 +5,8 @@
 
 <title>GFS Chart</title>
 
+<link rel="stylesheet" type="text/css" href="./common.css">
+
 <script>
 ////////// SCRIPT BEGIN //////////
 const TODAY = new Date();
@@ -34,17 +36,9 @@ function _next(h) {
 ////////// SCRIPT END //////////
 </script>
 
-<style type="text/css">
-main { text-align: center; }
-button { border-style: none; font-weight: bold; width: 80px; }
-div.text1 { position: relative; z-index: 1; }
-div.plot { position: relative; z-index: -1; margin-top:-5%; }
-div.text2 { position: relative; z-index: 1; margin-top:-15%; }
-</style>
 
 </head>
 <body>
-<main>
 
 <div class="text1">
 <button onclick="_lift(-1);">下層</button>
@@ -65,7 +59,6 @@ div.text2 { position: relative; z-index: 1; margin-top:-15%; }
 <button onclick="_lift(1);">上層</button>
 </div>
 
-</main>
 </body>
 </html>
 

@@ -15,28 +15,7 @@ print("argv:",sys.argv)
 ENCODE = "cp932"
 
 HEADER = '''
-<style type="text/css">
-.dataframe a { text-decoration:none; color:blue; }
-.dataframe td { white-space: nowrap; border-bottom: 1px solid #ddd; }
-.dataframe table { border: 1 }
-/* 行ヘッダの固定 */
-.dataframe thead th {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  background-color: #ddd;
-  z-index: 2;
-}
-/* 列ヘッダの固定 */
-.dataframe tbody th {
-  position: -webkit-sticky;
-  position: sticky;
-  left: 0;
-  background-color: #ddd;
-  z-index: 1;
-}
-/* レイアウト */
-</style>
+<link rel="stylesheet" type="text/css" href="../common.css">
 '''
 
 FOOTER = '''
