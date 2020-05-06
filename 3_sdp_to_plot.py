@@ -68,10 +68,13 @@ for SDP in SDP_PLOT:
   DF['VIS'] = DF['Visibility_surface_00'] / 1000.
   ## 突風(m/s)
   DF['GUST'] = DF['Wind_speed_gust_surface_00']
+  ## 
+  DF['4LFTX'] = DF['Best_4_layer_Lifted_Index_surface_00']
+  DF['LFTX'] = DF['Surface_Lifted_Index_surface_00']
   ########################################################
   ## プロット作成
   #plt.ticklabel_format(useLocale=False)
-  fig, axes = plt.subplots(nrows=6,ncols=1,figsize=(6,8))
+  fig, axes = plt.subplots(nrows=6,ncols=1,figsize=(5,8))
   fig.suptitle('SDP %05d forecast at UTC %s'%(SDP,DF.reftime[0][:-3]))
   ## 気温(degC)
   row = 0
@@ -100,15 +103,6 @@ for SDP in SDP_PLOT:
   axes[row].grid(True)
   axes[row].legend(loc='right')
   axes[row].set_ylim(0,1.05)
-  """
-  ## 大気安定度(kJ/kg)
-  row = row + 1
-  for c in ['CAPE','CIN']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
-  axes[row].set_ylabel("Stability (kJ/kg)")
-  axes[row].grid(True)
-  axes[row].legend(loc='right')
-  #axes[row].set_ylim(-2,2)
-  """
   ## 視程(km)
   row = row + 1
   for c in ['VIS']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
@@ -117,9 +111,25 @@ for SDP in SDP_PLOT:
   axes[row].legend(loc='right')
   axes[row].set_ylim(0,30)
   ## 高層気温(degC)
+  """
   row = row + 1
   for c in ['T800mb','T500mb','T350mb']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
   axes[row].set_ylabel("Temp. (C)")
+  axes[row].grid(True)
+  axes[row].legend(loc='right')
+  #axes[row].set_ylim(-2,2)
+  ## 大気安定度(kJ/kg)
+  row = row + 1
+  for c in ['CAPE','CIN']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
+  axes[row].set_ylabel("Stability (kJ/kg)")
+  axes[row].grid(True)
+  axes[row].legend(loc='right')
+  #axes[row].set_ylim(-2,2)
+  """
+  ## 大気安定度(K)
+  row = row + 1
+  for c in ['4LFTX','LFTX']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
+  axes[row].set_ylabel("Stability (K)")
   axes[row].grid(True)
   axes[row].legend(loc='right')
   #axes[row].set_ylim(-2,2)
