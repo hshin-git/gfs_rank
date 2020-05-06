@@ -11,6 +11,7 @@ from netCDF4 import num2date
 from siphon.catalog import TDSCatalog
 import xarray as xr
 
+import COMMON as COM
 
 ###########################################
 print("argv:",sys.argv)
@@ -38,7 +39,6 @@ print("utc2:", UTC2)
 #sys.exit(0)
 
 ###########################################
-import COMMON as COM
 ## GFSデータの空間範囲: 経度と緯度
 WEST,EAST,SOUTH,NORTH = 115,155,20,50
 print("area:", WEST,EAST,SOUTH,NORTH)
@@ -55,11 +55,15 @@ os.makedirs(OUT_PATH, exist_ok=True)
 
 ###########################################
 ## GFSデータの取得先
-TDS_ROOT = 'http://thredds.ucar.edu/thredds/catalog/grib/NCEP/GFS/'
+TDS_ROOT =[
+	'http://thredds.ucar.edu/thredds/catalog/grib/NCEP/GFS/',
+	'https://thredds-jumbo.unidata.ucar.edu/thredds/catalog/grib/NCEP/GFS/',
+	'http://thredds-jetstream.unidata.ucar.edu/thredds/catalog/grib/NCEP/GFS/',
+][2]
 TDS_PATH = [
 	'Global_0p25deg/catalog.xml?dataset=grib/NCEP/GFS/Global_0p25deg/Best',
 	'Global_0p25deg_ana/catalog.xml?dataset=grib/NCEP/GFS/Global_0p25deg_ana/TP',
-	'Global_0p5deg/catalog.xml?dataset=grib/NCEP/GFS/Global_0p5deg/Best'
+	'Global_0p5deg/catalog.xml?dataset=grib/NCEP/GFS/Global_0p5deg/Best',
 ][2]
 print("server:", TDS_ROOT)
 print("catalog:", TDS_PATH)
