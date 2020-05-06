@@ -152,7 +152,7 @@ clevs_500_sped = np.arange(60, 160+1, 20)
 cf = ax.contourf(lons, lats, sped_500, clevs_500_sped, cmap=plt.cm.GnBu,
                  transform=datacrs)
 cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
-cb.set_label('Wind Speed (kt)')
+cb.set_label('Wind Speed (kt)',fontsize=COM.FONTSIZE)
 
 # Plot 500-hPa Geopotential Heights in meters
 clevs_500_hght = np.arange(0, 12000, 60*2)
@@ -183,6 +183,7 @@ plt.title('JST {}'.format(vtime+timedelta(hours=9)), loc='right',fontsize=COM.FO
 #plt.subplots_adjust(bottom=0, top=1)
 
 #plt.show()
+plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTTOM)
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)

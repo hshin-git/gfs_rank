@@ -210,7 +210,7 @@ cf = ax.contourf(lon_2d, lat_2d,
 #cb = plt.colorbar(cf, cax=cax, orientation='horizontal', extendrect=True, ticks=cint)
 #cb.set_label(r'$^{o}C/3h$', size='large')
 cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
-cb.set_label(r'Temperature Advection ($^{o}C/3h$)')
+cb.set_label(r'Temperature Advection ($^{o}C/3h$)',fontsize=COM.FONTSIZE)
 
 # Plot Wind Barbs
 """
@@ -229,6 +229,7 @@ plt.title('GFS 850-hPa Geopotential Heights (m), Temperature (C)', loc='left',fo
 plt.title('JST {}'.format(time+timedelta(hours=9)), loc='right',fontsize=COM.FONTSIZE)
 
 #plt.show()
+plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTTOM)
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)

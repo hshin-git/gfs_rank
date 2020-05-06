@@ -154,7 +154,7 @@ cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHR
 cb.set_label('Temperature (C)')
 csf = ax.contour(lons, lats, tmpc_850, clevs_850_tmpc, colors='grey',linewidths=COM.LINEWIDTH,
                  linestyles='dashed', transform=datacrs)
-plt.clabel(csf, fmt='%d')
+plt.clabel(csf, fmt='%d',fontsize=COM.FONTSIZE)
 
 # Plot contours of 850-hPa geopotential heights in meters
 clevs_850_hght = np.arange(0, 8000, 60)
@@ -178,6 +178,8 @@ plt.show()
 """
 plt.title('GFS 500-hPa Heights (m), Temp. (C) and Wind Barbs (kt)', loc='left',fontsize=COM.FONTSIZE)
 plt.title('JST {}'.format(vtime+timedelta(hours=9)), loc='right',fontsize=COM.FONTSIZE)
+#
+plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTTOM)
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)

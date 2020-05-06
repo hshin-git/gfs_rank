@@ -19,8 +19,8 @@ body#readme h1 { border-bottom: solid 3px #ddd; }
 
 /***** chart.html *****/
 div.text1 { position: relative; z-index: 1; }
-div.plot { position: relative; z-index: -1; margin-top:-5%; }
-div.text2 { position: relative; z-index: 1; margin-top:-15%; }
+div.plot { position: relative; z-index: -1; margin-top: 0%; }
+div.text2 { position: relative; z-index: 1; margin-top: 0%; }
 
 
 /***** table.html *****/

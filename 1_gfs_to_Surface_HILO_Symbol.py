@@ -133,17 +133,17 @@ vtime = num2date(time[:], units=time.units)
 # Grab MSLP and smooth, use MetPy Units module for conversion
 EMSL = data.variables['Pressure_reduced_to_MSL_msl'][:] / 100. #* units.Pa
 #EMSL.ito('hPa')
-mslp = gaussian_filter(EMSL[t], sigma=3.0)
+SIGMA = 3.0/1.5	# for smoothing parameter
+mslp = gaussian_filter(EMSL[t], sigma=SIGMA)
 
 # Grab pressure level data
 hght_1000 = data.variables['Geopotential_height_isobaric'][t, plev.index(1000*100)]
 hght_500 = data.variables['Geopotential_height_isobaric'][t, plev.index(500*100)]
 
 # Calculate and smooth 1000-500 hPa thickness
-thickness_1000_500 = gaussian_filter(hght_500 - hght_1000, sigma=3.0)
+thickness_1000_500 = gaussian_filter(hght_500 - hght_1000, sigma=SIGMA)
 
 # 降水分布
-SIGMA = 3.0/2
 crain = data.variables['Categorical_Rain_surface'][:]
 crain = gaussian_filter(crain[t], sigma=SIGMA) * 100.
 #sys.exit(0)
@@ -198,7 +198,7 @@ for clevthick, color in zip(clevs, colors):
 clevs_crain = np.arange(20, 101, 20)
 cf = ax.contourf(lons, lats, crain, clevs_crain, cmap=plt.cm.Blues, transform=dataproj, norm=plt.Normalize(0, 150))
 cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
-cb.set_label('Categorical Rain Surface (%)')
+cb.set_label('Categorical Rain Surface (%)', fontsize=COM.FONTSIZE)
 
 # Plot MSLP
 clevmslp = np.arange(800., 1120., 4)
@@ -217,6 +217,7 @@ plt.title('GFS MSLP (hPa) with H and L, 1000-500 hPa Thickness (m)', loc='left',
 plt.title('JST {}'.format(vtime[t]+timedelta(hours=9)), loc='right', fontsize=COM.FONTSIZE)
 
 #plt.show()
+plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTTOM)
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)

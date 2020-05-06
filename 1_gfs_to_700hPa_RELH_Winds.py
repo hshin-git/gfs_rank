@@ -160,7 +160,7 @@ clevs_700_relh = np.arange(80, 100+1, 5)
 cf = ax.contourf(lons, lats, relh_700, clevs_700_relh, cmap=plt.cm.Purples,
                  norm=plt.Normalize(80, 120), transform=datacrs)
 cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
-cb.set_label('Rel. Humidity (%)')
+cb.set_label('Rel. Humidity (%)',fontsize=COM.FONTSIZE)
 
 # Plot contours of 700-hPa temperature in Celsius in red, dashed lines
 clevs_700_tmpc = np.arange(-42, 42+1, 3)
@@ -187,7 +187,8 @@ plt.show()
 """
 plt.title('GFS 700-hPa Heights (m), Temp. (C), and Wind Barbs (kt)', loc='left',fontsize=COM.FONTSIZE)
 plt.title('JST {}'.format(vtime+timedelta(hours=9)), loc='right',fontsize=COM.FONTSIZE)
-
+#
+plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTTOM)
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)

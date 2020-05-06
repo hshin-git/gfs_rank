@@ -181,7 +181,7 @@ cf = ax.contourf(lon, lat, vort_adv.m * 1e9, clev_avoradv[clev_avoradv != 0], #e
 #cax = plt.subplot(gs[1])
 #cb = plt.colorbar(cf, orientation='horizontal', extendrect='True', ticks=clev_avoradv)
 cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, ticks=clev_avoradv, shrink=COM.SHRINK)
-cb.set_label(r'Absolute Vorticity Advection ($1/s^2$)')
+cb.set_label(r'Absolute Vorticity Advection ($1/s^2$)', fontsize=COM.FONTSIZE)
 
 
 # Plot Wind Barbs
@@ -193,6 +193,7 @@ ax.barbs(lon, lat, uwnd_500*KT, vwnd_500*KT, pivot='middle', color='grey',
 	regrid_shape=20, transform=ccrs.PlateCarree())
 
 #plt.show()
+plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTTOM)
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
