@@ -165,7 +165,7 @@ ax.add_feature(cfeature.STATES.with_scale('50m'))
 cf = ax.contourf(lons, lats, fronto_850*convert_to_per_100km_3h, np.arange(-8, 8.5, 0.5),
                  cmap=plt.cm.bwr, extend='both', transform=datacrs)
 cb = plt.colorbar(cf, ax=ax, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
-cb.set_label('Frontogenesis (K/100km/3h)')
+cb.set_label('Frontogenesis (K/100km/3h)',fontsize=COM.FONTSIZE)
 
 # Plot 850-hPa Temperature in Celsius
 clevs_tmpc = np.arange(-42, 42+1, 3)
@@ -193,6 +193,8 @@ plt.show()
 """
 plt.title('GFS 850-hPa Heights (m), Temp (C), and Winds', loc='left', fontsize=COM.FONTSIZE)
 plt.title('JST {}'.format(vtime+timedelta(hours=9)), loc='right', fontsize=COM.FONTSIZE)
+#
+plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTTOM)
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)

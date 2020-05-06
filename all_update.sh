@@ -1,7 +1,9 @@
 #!/bin/sh
 echo "BEGIN:" $(date)
 #DEBUG=echo
-PYTHON=/home/ubuntu/anaconda3/bin/python
+PYTHON=/home/shin/anaconda3/bin/python
+#PYTHON=/home/ubuntu/anaconda3/bin/python
+
 
 echo "##################################################"
 ##### 年月日の計算: 起動日前日UTC12時=JST21時の初期値を利用

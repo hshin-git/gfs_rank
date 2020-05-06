@@ -176,6 +176,8 @@ plt.show()
 """
 plt.title('GFS 850-hPa Heights (m), Temp. (C) and Wind Barbs (kt)', loc='left',fontsize=COM.FONTSIZE)
 plt.title('JST {}'.format(vtime+timedelta(hours=9)), loc='right',fontsize=COM.FONTSIZE)
+#
+plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTTOM)
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
