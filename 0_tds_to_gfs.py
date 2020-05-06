@@ -55,43 +55,46 @@ os.makedirs(OUT_PATH, exist_ok=True)
 
 ###########################################
 ## GFSデータの取得先
-TDS_ROOT =[
+TDS_LIST = [
 	'http://thredds.ucar.edu/thredds/catalog/grib/NCEP/GFS/',
 	'https://thredds-jumbo.unidata.ucar.edu/thredds/catalog/grib/NCEP/GFS/',
 	'http://thredds-jetstream.unidata.ucar.edu/thredds/catalog/grib/NCEP/GFS/',
-][2]
+]
 TDS_PATH = [
 	'Global_0p25deg/catalog.xml?dataset=grib/NCEP/GFS/Global_0p25deg/Best',
 	'Global_0p25deg_ana/catalog.xml?dataset=grib/NCEP/GFS/Global_0p25deg_ana/TP',
 	'Global_0p5deg/catalog.xml?dataset=grib/NCEP/GFS/Global_0p5deg/Best',
 ][2]
-print("server:", TDS_ROOT)
-print("catalog:", TDS_PATH)
 
 ###########################################
-# First we construct a `TDSCatalog` instance pointing to our dataset of interest, in
-# this case TDS' "Best" virtual dataset for the GFS global 0.25 degree collection of
-# GRIB files. This will give us a good resolution for our map. This catalog contains a
-# single dataset.
-best_gfs = TDSCatalog(TDS_ROOT + TDS_PATH)
-print("datasets:", list(best_gfs.datasets))
-
-###########################################
-# We pull out this dataset and get the NCSS access point
-best_ds = best_gfs.datasets[0]
-ncss = best_ds.subset()
-
-###########################################
-# We can then use the `ncss` object to create a new query object, which
-# facilitates asking for data from the server.
-query = ncss.query()
-query.lonlat_box(north=NORTH, south=SOUTH, east=EAST, west=WEST).time_range(UTC1,UTC2)
-query.accept('netcdf4')
-query.variables('all')
-
-print("query:","...")
-data = ncss.get_data(query)
-print("query:","done")
+for TDS_ROOT in TDS_LIST:
+  print("server:", TDS_ROOT)
+  print("catalog:", TDS_PATH)
+  ###########################################
+  try:
+    best_gfs = TDSCatalog(TDS_ROOT + TDS_PATH)
+    print("datasets:", list(best_gfs.datasets))
+    ###########################################
+    best_ds = best_gfs.datasets[0]
+    ncss = best_ds.subset()
+    ###########################################
+    query = ncss.query()
+    query.lonlat_box(north=NORTH, south=SOUTH, east=EAST, west=WEST).time_range(UTC1,UTC2)
+    query.accept('netcdf4')
+    query.variables('all')
+    print("query:","...")
+    data = ncss.get_data(query)
+  except:
+    print("query:","error")
+    if TDS_ROOT != TDS_ROOTS[-1]:
+      print("query:","retry")
+      continue
+    else:
+      print("query:","abort")
+      sys.exit(-1)
+  else:
+    print("query:","done")
+    break
 
 ###########################################
 ## convert netcdf to xarray
@@ -113,4 +116,4 @@ ds.close()
 
 ###########################################
 #data.close()
-
+sys.exit(0)
