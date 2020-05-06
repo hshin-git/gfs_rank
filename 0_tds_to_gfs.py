@@ -86,7 +86,7 @@ for TDS_ROOT in TDS_LIST:
     data = ncss.get_data(query)
   except:
     print("query:","error")
-    if TDS_ROOT != TDS_ROOTS[-1]:
+    if TDS_ROOT != TDS_LIST[-1]:
       print("query:","retry")
       continue
     else:
