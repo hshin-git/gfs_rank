@@ -11,8 +11,6 @@ echo "##################################################"
 
 echo "##################################################"
 $DEBUG rm ./chart/*.png
-$DEBUG rm ./graph/*.png
+$DEBUG rm ./graph/*.png ./graph/*.csv ./graph/*.html 
+$DEBUG rm ./info/*.csv ./info/*.html
 $DEBUG rm ./tile/*.png
-$DEBUG rm ./info/*.csv
-$DEBUG rm ./info/*.html
-
