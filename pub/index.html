@@ -10,8 +10,8 @@
 <title>GFS Rank</title>
 
 <link rel="stylesheet" type="text/css" href="./common.css">
-<link rel="apple-touch-icon" type="image/png" href="./favicon/apple-touch-icon-180x180.png">
 <link rel="icon" type="image/png" href="./favicon/icon-192x192.png">
+<link rel="apple-touch-icon" type="image/png" href="./favicon/apple-touch-icon-180x180.png">
 
 <script src="./imakoko.js"></script>
 <script type="text/javascript">
@@ -25,12 +25,12 @@ function tabClick(url) {
 function iframeResize() {
   const e = document.getElementById("tabNode");
   if (e) {
-    e.width = window.innerWidth - 20;
-    e.height = window.innerHeight - 160;
+    e.width = window.innerWidth - 10;
+    e.height = window.innerHeight - 80;
   }
 };
-window.onload = iframeResize;
-window.onresize = iframeResize;
+window.addEventListener('load',iframeResize);
+window.addEventListener('resize',iframeResize);
 ////////// SCRIPT END //////////
 </script>
 
@@ -57,8 +57,6 @@ window.onresize = iframeResize;
 </div>
 
 <hr>
-
-<a href="https://aws.amazon.com/what-is-cloud-computing"><img src="https://d0.awsstatic.com/logos/powered-by-aws.png" alt="Powered by AWS Cloud Computing"></a>
 
 </body>
 </html>
