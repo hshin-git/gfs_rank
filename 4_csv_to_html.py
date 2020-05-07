@@ -52,6 +52,13 @@ TENKI_EMOJI = {
   u"雨":"&#x1f327;",
   u"雪":"&#x1f328;",
 }
+TENKI_ICONS = {
+  u"快":"<img id='tenki' src='../tenki/hare.png' alt='快'>",
+  u"晴":"<img id='tenki' src='../tenki/hare_kumori.png' alt='晴'>",
+  u"曇":"<img id='tenki' src='../tenki/kumori.png' alt='曇'>",
+  u"雨":"<img id='tenki' src='../tenki/kumori_ame.png' alt='雨'>",
+  u"雪":"<img id='tenki' src='../tenki/snow.png' alt='雪'>",
+}
 
 ## ヘルパ関数
 def _NORMALIZE(s): return s.replace("'","").replace("Timestamp(","").replace(" 00:00:00)","").replace("_00","").replace(" ","")
@@ -60,9 +67,10 @@ def _MAPandJOIN(fn,ls): return "<br>".join([fn(x) for x in ls])
 def _GFS_HREF(s): return "<a id='{0}' href='./gfs_list.html#{0}'>{0}</a>".format(s)
 def _GFS_HREF2(s): return "<a id='{0}' href='./var_rank.html#{0}'>{0}</a> {1}".format(s,VAR_TEXT[s])
 def _SDP_HREF(s): return "<a href='../graph/{0}.png'>{0}</a>".format(s)
-def _ICONIFY(s): return TENKI_COLOR[s[0]].format(s) if s[0] in TENKI_COLOR else s
-def _ICONIFY(s): return TENKI_EMOJI[s[0]] if s[0] in TENKI_EMOJI else s
 def _JST_PID(s): return "<p id='{0}'>{1}</p>".format(s[:-6].replace("-","").replace(" ",""),s[:-3]) 
+#def _ICONIFY(s): return TENKI_COLOR[s[0]].format(s) if s[0] in TENKI_COLOR else s
+#def _ICONIFY(s): return TENKI_EMOJI[s[0]] if s[0] in TENKI_EMOJI else s
+def _ICONIFY(s): return TENKI_ICONS[s[0]] if s[0] in TENKI_ICONS else s
 
 ## フォーマット関数
 FORMATTERS = {

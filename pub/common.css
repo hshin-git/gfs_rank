@@ -1,6 +1,6 @@
 /***** index.html *****/
 body { text-align: center; font-size: 100%; }
-button { border-style: none; font-weight: bold; width: 80px; }
+button { border-style: solid; font-weight: bold; width: 80px; }
 .tabBody iframe {
   position: relative;
   border: 0;
@@ -24,6 +24,7 @@ div.text2 { position: relative; z-index: 1; margin-top: 0%; }
 
 
 /***** table.html *****/
+img#tenki { width: 24px; height: 24px; }
 .dataframe a { text-decoration:none; color:blue; }
 .dataframe td { white-space: nowrap; border-bottom: 1px solid #ddd; }
 .dataframe table { border: 1 }
