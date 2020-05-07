@@ -1,6 +1,6 @@
 /***** index.html *****/
 body { text-align: center; font-size: 100%; }
-button { border-style: solid; font-weight: bold; width: 80px; }
+button { border-style: none; font-weight: bold; width: 80px; }
 .tabBody iframe {
   position: relative;
   border: 0;
