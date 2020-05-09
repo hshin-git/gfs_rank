@@ -33,7 +33,7 @@ echo "##################################################"
 $DEBUG $PYTHON 1_gfs_to_list.py $GFS_PATH
 
 echo "##################################################"
-##### SDP統計値の作成: conf/*.csv, gfs/gfs_*.nc -> (forecast|hindcast)/*.csv
+##### SDP統計値の作成: conf/*.csv, gfs/gfs_*.nc -> forecast/*.csv
 $DEBUG $PYTHON 2_gfs_to_stat.py
 
 echo "##################################################"
@@ -84,15 +84,15 @@ echo "##################################################"
 
 echo "##################################################"
 ##### 定期メンテナンス処理
-## CSVファイルの保存
+## CSVファイルの保存: info/*.csv, forecast/*.csv -> data/*.zip
 $DEBUG zip ./data/${GFS_INIT}.zip info/*.csv forecast/*.csv
 
-## CSVファイルの更新（日曜日=0）
+## CSVファイルの更新: conf/*.csv, gfs/gfs_*.nc -> hindcast/*.csv
 if [ $DAY_WEEK = 0 ]; then 
 $DEBUG $PYTHON 2_gfs_to_stat.py $GFS_PAST $GFS_INIT 7
 fi
 
-## GFSファイルの削除（$GFS_PASTより古い日）
+## GFSファイルの削除: gfs/gfs_old.nc -> null
 for p in $(seq 1 1 14); do
 OUT_DATE=$(date "+%Y%m%d12" -d "${GFS_PAST:0:-2} -$p days")
 gfs="./gfs/gfs_${OUT_DATE}_168.nc"

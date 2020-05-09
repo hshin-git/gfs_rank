@@ -1,6 +1,7 @@
 /***** index.html *****/
-body { text-align: center; font-size: 100%; }
-button { border-style: none; font-weight: bold; width: 80px; }
+body { text-align: center; }
+button { border-style: none; font-weight: bold; width: 80px; border-radius: 8px; background-color: gold; }
+
 .tabBody iframe {
   position: relative;
   border: 0;
@@ -14,7 +15,7 @@ button { border-style: none; font-weight: bold; width: 80px; }
 
 /***** readme.html *****/
 body#readme { text-align: left; }
-body#readme h1 { border-bottom: solid 3px #ddd; }
+body#readme h1 { border-bottom: solid 4px gold; }
 
 
 /***** chart.html *****/
@@ -26,14 +27,14 @@ div.text2 { position: relative; z-index: 1; margin-top: 0%; }
 /***** table.html *****/
 img#tenki { width: 24px; height: 24px; }
 .dataframe a { text-decoration:none; color:blue; }
-.dataframe td { white-space: nowrap; border-bottom: 1px solid #ddd; }
+.dataframe td { white-space: nowrap; border-bottom: 1px solid gray; }
 .dataframe table { border: 1 }
 /* 行ヘッダの固定 */
 .dataframe thead th {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  background-color: #ddd;
+  background-color: gold;
   z-index: 2;
 }
 /* 列ヘッダの固定 */
@@ -41,7 +42,7 @@ img#tenki { width: 24px; height: 24px; }
   position: -webkit-sticky;
   position: sticky;
   left: 0;
-  background-color: #ddd;
+  background-color: gold;
   z-index: 1;
 }
 
