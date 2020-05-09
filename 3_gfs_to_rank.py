@@ -4,6 +4,7 @@ import pandas as pd
 import scipy.stats as stats
 #import matplotlib.pyplot as plt
 import os,sys
+from datetime import datetime
 import COMMON as COM
 
 
@@ -20,6 +21,7 @@ DATA_PATH = COM.FCST_PATH	#"./forecast"
 ## ランキング結果の出力先
 OUT_PATH = COM.INFO_PATH	#"./info"
 print("argv:",sys.argv)
+print("date:",datetime.now())
 print("in1:",STAT_PATH)
 print("in2:",DATA_PATH)
 print("out:",OUT_PATH)

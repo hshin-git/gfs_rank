@@ -6,6 +6,7 @@ import numpy  as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os,sys
+from datetime import datetime
 import COMMON as COM
 plt.style.use(COM.MPLSTYLE)
 
@@ -19,6 +20,7 @@ CSV_PATH = COM.FCST_PATH	#"./forecast"
 OUT_PATH = COM.PLOT_PATH	#"./graph"
 
 print("argv:",sys.argv)
+print("date:",datetime.now())
 print("csv:",CSV_PATH)
 print("out:",OUT_PATH)
 os.makedirs(OUT_PATH, exist_ok=True)
@@ -41,7 +43,8 @@ for SDP in SDP_PLOT:
   ########################################################
   ## データ準備
   ## 気温(degC)
-  DF['TMP'] = DF['Temperature_surface_00'] - 273.15
+  T0K = 273.15
+  DF['TMP'] = DF['Temperature_surface_00'] - T0K
   DF['DPT'] = DF['Dewpoint_temperature_height_above_ground_00'] - 273.15
   ## 雲量(0-1)
   DF['TCDC'] = DF['Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average_00'] / 100.
@@ -59,11 +62,13 @@ for SDP in SDP_PLOT:
   DF['CAPE'] = DF['Convective_available_potential_energy_surface_00'] / 1000.
   DF['CIN'] = DF['Convective_inhibition_surface_00'] / 1000.
   ## 高層気温(degC) @ isobaric6=[0,3,6,9,...,33]
-  DF['T350mb'] = DF['Temperature_isobaric_18'] - 273.15
-  DF['T500mb'] = DF['Temperature_isobaric_21'] - 273.15
-  DF['T800mb'] = DF['Temperature_isobaric_27'] - 273.15
-  DF['T925mb'] = DF['Temperature_isobaric_30'] - 273.15
-  DF['T1000mb'] = DF['Temperature_isobaric_33'] - 273.15
+  """
+  DF['T350mb'] = DF['Temperature_isobaric_18'] - T0K
+  DF['T500mb'] = DF['Temperature_isobaric_21'] - T0K
+  DF['T800mb'] = DF['Temperature_isobaric_27'] - T0K
+  DF['T925mb'] = DF['Temperature_isobaric_30'] - T0K
+  DF['T1000mb'] = DF['Temperature_isobaric_33'] - T0K
+  """
   ## 視程(km)
   DF['VIS'] = DF['Visibility_surface_00'] / 1000.
   ## 突風(m/s)
@@ -118,7 +123,9 @@ for SDP in SDP_PLOT:
   axes[row].grid(True)
   axes[row].legend(loc='right')
   #axes[row].set_ylim(-2,2)
+  """
   ## 大気安定度(kJ/kg)
+  """
   row = row + 1
   for c in ['CAPE','CIN']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
   axes[row].set_ylabel("Stability (kJ/kg)")
@@ -141,7 +148,7 @@ for SDP in SDP_PLOT:
   ## CSV保存: イマココ用
   #DF = DF[["TMP","DPT","SWD","LWD","CRAIN","CSNOW","CICEP","TCDC","VIS","GUST"]]
   DF["TNK"] = DF.apply(lambda x: (u"雪" if x.CSNOW else (u"雨" if x.CRAIN else (u"曇" if x.TCDC>0.8 else (u"晴" if x.TCDC>0.2 else u"快")))), axis=1)
-  COL = {"TNK":u"天気","TCDC":u"雲量","TMP":u"気温","SWD":u"日射","GUST":u"突風","VIS":u"視程"}
+  COL = {"TNK":u"天気","TMP":u"気温","TCDC":u"雲量","SWD":u"日射","GUST":u"突風","VIS":u"視程"}
   DF = DF[list(COL)]
   DF = DF.rename(columns=COL)
   DF.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP, encoding=ENCODE)

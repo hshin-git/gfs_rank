@@ -1,31 +1,33 @@
-###########################################
+##################################################
 ## GFSファイルから気象変数リストを作成
-###########################################
+##################################################
 #import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import xarray as xr
-import os,sys,datetime
+import os,sys
+from datetime import datetime
 import COMMON as COM
 
 
-###########################################
+##################################################
 ## コマンドライン引数: GFSファイル指定
 GFS_PATH = "./gfs/gfs_2020042012_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv)>1 else GFS_PATH
 OUT_PATH = COM.INFO_PATH	#"./info"
 ##
 print("argv:",sys.argv)
+print("date:",datetime.now())
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
 os.makedirs(OUT_PATH, exist_ok=True)
 
 
-###########################################
+##################################################
 ## GFSファイルの参照開始
 ds = xr.open_dataset(GFS_PATH)
 
-###########################################
+##################################################
 COLS = [
 # 追加属性
  'LAYERS',
@@ -69,7 +71,7 @@ for k in sorted(ds.variables)[:]:
   for c in a:
     if c in COLS: INFO.loc[k,c] = a[c]
 
-###########################################
+##################################################
 ## GFSファイルの参照終了
 ds.close()
 
@@ -77,5 +79,6 @@ ds.close()
 INFO = INFO[INFO.LAYERS>0]
 INFO.to_csv(OUT_PATH + "/" + "gfs_list.csv",index=True)
 
-###########################################
+##################################################
+sys.exit(0)
 

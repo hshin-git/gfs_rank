@@ -3,15 +3,17 @@ import numpy  as np
 import pandas as pd
 #import matplotlib.pyplot as plt
 import os,sys
+from datetime import datetime
 import COMMON as COM
 
 ##################################################
 ## 気象庁アメダス一覧
-JMA_LIST = sys.argv[1] if len(sys.argv)>1 else "./conf/ame_master.csv"
+JMA_LIST = sys.argv[1] if len(sys.argv) > 1 else "./conf/ame_master.csv"
 OUT_PATH = COM.INFO_PATH	#"./info"
 ##
 print("argv:",sys.argv)
-print("ame:",JMA_LIST)
+print("date:",datetime.now())
+print("csv:",JMA_LIST)
 print("out:",OUT_PATH)
 os.makedirs(OUT_PATH, exist_ok=True)
 
@@ -51,4 +53,7 @@ DF["lon"] = np.round(DF.LONdeg + DF.LONmin/60., decimals=ROUND)
 
 ## CSV保存
 DF.to_csv(OUT_PATH +"/"+ "sdp_list.csv",index=False,encoding=ENCODE)
+
+##################################################
+sys.exit(0)
 

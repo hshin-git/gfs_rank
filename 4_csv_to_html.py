@@ -10,6 +10,7 @@ import COMMON as COM
 ##################################################
 CSV_LIST = sys.argv[1:]
 print("argv:",sys.argv)
+print("date:",datetime.now())
 
 ##################################################
 ENCODE = "cp932"
@@ -38,21 +39,21 @@ for i in VAR_RANK.index:
 
 ##################################################
 ## 天気テキスト
-TENKI_COLOR = {
+TENKI_COLOR = {	#色付き文字
   u"快":"<font color=#f00>{}</font>",
   u"晴":"<font color=#f00>{}</font>",
   u"曇":"<font color=#000>{}</font>",
   u"雨":"<font color=#00f>{}</font>",
   u"雪":"<font color=#0f0>{}</font>",
 }
-TENKI_EMOJI = {
+TENKI_EMOJI = {	#絵文字
   u"快":"&#x1f31e;",
   u"晴":"&#x1f324;",
   u"曇":"&#x2601;",
   u"雨":"&#x1f327;",
   u"雪":"&#x1f328;",
 }
-TENKI_ICONS = {
+TENKI_ICONS = {	#画像（いらすとや）
   u"快":"<img id='tenki' src='../tenki/hare.png' alt='快'>",
   u"晴":"<img id='tenki' src='../tenki/hare_kumori.png' alt='晴'>",
   u"曇":"<img id='tenki' src='../tenki/kumori.png' alt='曇'>",

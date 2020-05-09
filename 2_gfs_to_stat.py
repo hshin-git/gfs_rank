@@ -15,16 +15,22 @@ import COMMON as COM
 
 ###########################################
 print("argv:",sys.argv)
+print("date:",datetime.now())
+
+## 引数の数により動作モードをスイッチ（予測か統計か）
 FORECAST = True if len(sys.argv) < 3 else False
 
-## コマンドライン引数: 開始日、終了日
+## コマンドライン引数: 開始日、終了日、ステップ
 JST1 = datetime.now()
 JST1 = datetime.strptime(sys.argv[1][:8],"%Y%m%d") if len(sys.argv) > 1 else datetime(JST1.year,JST1.month,JST1.day,0)
 
 JST2 = JST1 + timedelta(days=7)
 JST2 = datetime.strptime(sys.argv[2][:8],"%Y%m%d") + timedelta(days=1) if len(sys.argv) > 2 else JST2
 
-## コマンドライン引数の数により保存先を切り替え
+STEP = 1
+STEP = int(sys.argv[3]) if len(sys.argv) > 3 else STEP
+
+## 動作モードにより出力先をスイッチ
 #OUT_PATH = "./forecast" if FORECAST else "./hindcast"
 OUT_PATH = COM.FCST_PATH if FORECAST else COM.HCST_PATH
 os.makedirs(OUT_PATH, exist_ok=True)
@@ -42,7 +48,7 @@ GFS_INIT = 12
 GFS_DAYS = 7
 GFS_PATH = []
 GFS_ROOT = "./gfs"
-for d in range(0,DAYS):
+for d in range(0,DAYS,STEP):
   UTC = UTC1 + timedelta(days=d)
   GFS = GFS_ROOT +"/"+ "gfs_%s%02d_%03d.nc"%(UTC.strftime("%Y%m%d"),GFS_INIT,24*GFS_DAYS)
   if os.path.exists(GFS): GFS_PATH += [GFS]
@@ -65,7 +71,7 @@ def lat_lon_to_y_x(lat,lon,lat_,lon_):
 ENCODE = "cp932"
 SDP_LIST = pd.read_csv("./info/sdp_list.csv",index_col="SDP",encoding=ENCODE)
 GFS_LIST = pd.read_csv("./info/gfs_list.csv",index_col="GFS",encoding=ENCODE)
-VAR_LIST = GFS_LIST[GFS_LIST.LAYERS==1].index.tolist() + ["Temperature_isobaric"]
+VAR_LIST = GFS_LIST[GFS_LIST.LAYERS==1].index.tolist() #+ ["Temperature_isobaric"]
 """
 # デバッグ用: 地点と変数を制限
 SDP_LIST = SDP_LIST[:4]
@@ -118,8 +124,8 @@ for GFS in GFS_PATH:
       DIM = len(SHAPE)
       NZ = 1 if DIM==3 else SHAPE[1]
       NT = len(INDEX)
-      ## 高さ方向のループ
-      for z in range(0,NZ,3):
+      ## 高さ方向のループ（気圧面量は10刻み）
+      for z in range(0,NZ,10):
         c = "%s_%02d"%(NAME,z)
         if SHAPE[0]!=NT:
           print("skip:",NAME)
@@ -159,4 +165,7 @@ for SDP in SDP_LIST.index:
   else:
     DATA.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP)
     STAT.to_csv(OUT_PATH +"/"+ "%05d_stat.csv"%SDP)
+
+##################################################
+sys.exit(0)
 

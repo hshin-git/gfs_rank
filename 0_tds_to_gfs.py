@@ -15,7 +15,8 @@ import COMMON as COM
 
 ###########################################
 print("argv:",sys.argv)
-## コマンドライン引数: 開始年月日、予報期間(日)
+print("date:",datetime.now())
+## コマンドライン引数: 開始年月日(YYYYMMDD)、予報期間(日)
 NOW = datetime.utcnow()
 NOW = datetime.strptime(sys.argv[1][:8],"%Y%m%d") if len(sys.argv) > 1 else NOW
 

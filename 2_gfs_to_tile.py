@@ -24,16 +24,17 @@ import COMMON as COM
 
 
 ###########################################
-## コマンドライン引数: 入力ファイル、出力日数
+## コマンドライン引数: GFSファイル名、変数名リスト
 GFS_PATH = "./gfs/gfs_2020042012_168.nc"
-GFS_PATH = sys.argv[1] if len(sys.argv)>1 else GFS_PATH
+GFS_PATH = sys.argv[1] if len(sys.argv) > 1 else GFS_PATH
 
 VAR_LIST = ["Visibility_surface"]
-VAR_LIST = sys.argv[2:] if len(sys.argv)>2 else VAR_LIST
+VAR_LIST = sys.argv[2:] if len(sys.argv) > 2 else VAR_LIST
 
 ## ファイル出力場所
 OUT_PATH = COM.TILE_PATH	#"./tile"
 print("argv:",sys.argv)
+print("date:",datetime.now())
 print("gfs:",GFS_PATH)
 print("out:",OUT_PATH)
 os.makedirs(OUT_PATH, exist_ok=True)
@@ -210,4 +211,6 @@ for NAME in VAR_LIST:
 ## GFSデータの参照終了
 data.close()
 
+##################################################
+sys.exit(0)
 

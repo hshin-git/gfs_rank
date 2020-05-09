@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo "BEGIN:" $(date)
 #DEBUG=echo
 PYTHON=/home/shin/anaconda3/bin/python
@@ -11,7 +11,7 @@ echo "##################################################"
 GFS_INIT=$(date "+%Y%m%d12" -d "-1 days")
 GFS_PATH="gfs/gfs_"${GFS_INIT}"_168.nc"
 
-GFS_PAST=$(date "+%Y%m%d12" -d "-15 days")
+GFS_PAST=$(date "+%Y%m%d12" -d "-28 days")
 DAY_WEEK=$(date "+%w")
 
 echo "gfs_init:" $GFS_INIT
@@ -34,11 +34,7 @@ $DEBUG $PYTHON 1_gfs_to_list.py $GFS_PATH
 
 echo "##################################################"
 ##### SDP統計値の作成: conf/*.csv, gfs/gfs_*.nc -> (forecast|hindcast)/*.csv
-if [ $DAY_WEEK = 0 ]; then 
-$DEBUG $PYTHON 2_gfs_to_stat.py $GFS_PAST $GFS_INIT
-fi
 $DEBUG $PYTHON 2_gfs_to_stat.py
-
 
 echo "##################################################"
 ##### GFSランクの作成: conf/*.csv, (forecast|hindcast)/*.csv -> info/gfs_rank*.csv
@@ -87,11 +83,24 @@ echo "##################################################"
 
 
 echo "##################################################"
-##### GFSランクの保存: info/*.csv -> info_history/*.csv
-for src in $(ls ./info/*.csv); do
-dst="./info_history/"${GFS_INIT}"-"$(basename $src)
-$DEBUG cp $src $dst 
+##### 定期メンテナンス処理
+## CSVファイルの保存
+$DEBUG zip ./data/${GFS_INIT}.zip info/*.csv forecast/*.csv
+
+## CSVファイルの更新（日曜日=0）
+if [ $DAY_WEEK = 0 ]; then 
+$DEBUG $PYTHON 2_gfs_to_stat.py $GFS_PAST $GFS_INIT 7
+fi
+
+## GFSファイルの削除（$GFS_PASTより古い日）
+for p in $(seq 1 1 14); do
+OUT_DATE=$(date "+%Y%m%d12" -d "${GFS_PAST:0:-2} -$p days")
+gfs="./gfs/gfs_${OUT_DATE}_168.nc"
+if [ -e $gfs ]; then
+$DEBUG rm $gfs
+fi
 done
+
 
 echo "##################################################"
 echo "END:" $(date)
