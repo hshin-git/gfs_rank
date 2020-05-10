@@ -73,9 +73,11 @@ for SDP in SDP_PLOT:
   DF['VIS'] = DF['Visibility_surface_00'] / 1000.
   ## 突風(m/s)
   DF['GUST'] = DF['Wind_speed_gust_surface_00']
-  ## 
+  ## リフト指数(K)
   DF['4LFTX'] = DF['Best_4_layer_Lifted_Index_surface_00']
   DF['LFTX'] = DF['Surface_Lifted_Index_surface_00']
+  ## 湿度(%)
+  DF['RH'] = DF['Relative_humidity_height_above_ground_00']
   ########################################################
   ## プロット作成
   #plt.ticklabel_format(useLocale=False)
@@ -148,7 +150,7 @@ for SDP in SDP_PLOT:
   ## CSV保存: イマココ用
   #DF = DF[["TMP","DPT","SWD","LWD","CRAIN","CSNOW","CICEP","TCDC","VIS","GUST"]]
   DF["TNK"] = DF.apply(lambda x: (u"雪" if x.CSNOW else (u"雨" if x.CRAIN else (u"曇" if x.TCDC>0.8 else (u"晴" if x.TCDC>0.2 else u"快")))), axis=1)
-  COL = {"TNK":u"天気","TMP":u"気温","TCDC":u"雲量","SWD":u"日射","GUST":u"突風","VIS":u"視程"}
+  COL = {"TNK":u"天気","TMP":u"気温","RH":u"湿度","TCDC":u"雲量","SWD":u"日射","GUST":u"突風","VIS":u"視程"}
   DF = DF[list(COL)]
   DF = DF.rename(columns=COL)
   DF.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP, encoding=ENCODE)
