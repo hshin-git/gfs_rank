@@ -20,4 +20,4 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-30 5  * * *  cd /home/ubuntu/weather; /bin/bash ./aws_update.sh > ./pub/crontab.log 2>&1
+0 5  * * *  cd /home/ubuntu/gfs_rank; /bin/bash ./aws_update.sh > ./pub/crontab.log 2>&1
