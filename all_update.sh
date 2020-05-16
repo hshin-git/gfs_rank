@@ -56,7 +56,7 @@ $DEBUG $PYTHON 4_csv_to_html.py ./info/*.csv ./graph/*.csv
 
 echo "##################################################"
 ##### GFS天気図の作成: gfs/gfs_*.nc -> chart/*.png
-for t in `seq 0 1 56`
+for t in `seq 0 2 56`
 do
   echo chart $t
   ##### Surface

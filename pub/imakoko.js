@@ -1,14 +1,13 @@
 ////////// SCRIPT BEGIN //////////
 // 緯度と経度の取得
-var LAT = 35.69;
-var LON = 139.75; 
+var LAT =  35.6896;
+var LON = 139.7618; 
 function getLatLon() {
   if (navigator.geolocation) {
-    var setLatLon = function (position) {
-      LAT = position.coords.latitude;
-      LON = position.coords.longitude;
-    };
-    navigator.geolocation.getCurrentPosition(setLatLon);
+    const success = function (pos) { LAT = pos.coords.latitude; LON = pos.coords.longitude; };
+    const error = function (err) { alert(err.code +":"+ err.message); };
+    const opts = { enableHighAccuracy:true, timeout:5000, maximumAge:0 };
+    navigator.geolocation.getCurrentPosition(success,error,opts);
   };
 }
 // 地点リストの取得

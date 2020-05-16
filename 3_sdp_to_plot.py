@@ -8,7 +8,10 @@ import matplotlib.pyplot as plt
 import os,sys
 from datetime import datetime
 import COMMON as COM
+##
 plt.style.use(COM.MPLSTYLE)
+plt.rcParams["font.family"] = "IPAexGothic"
+plt.rcParams["font.sans-serif"] = "IPAexGothic"
 
 
 ########################################################
@@ -32,11 +35,13 @@ ENCODE = "cp932"
 SDP_LIST = pd.read_csv("./info/sdp_list.csv",index_col="SDP",encoding=ENCODE)
 SDP_PLOT = SDP_LIST.index if len(SDP_PLOT)==0 else SDP_PLOT
 
+
 ########################################################
 #SDP_PLOT = SDP_PLOT[:2]
 for SDP in SDP_PLOT:
   SDP = int(SDP)
   NAME = SDP_LIST.loc[SDP,"NAME"]
+  FUKEN = SDP_LIST.loc[SDP,"FUKEN"]
   DF = pd.read_csv(CSV_PATH +"/"+ "%05d.csv"%SDP,parse_dates=[0],index_col=0)
   DF = DF[:-(len(DF)%8)]
   print(SDP,NAME)
@@ -82,7 +87,7 @@ for SDP in SDP_PLOT:
   ## プロット作成
   #plt.ticklabel_format(useLocale=False)
   fig, axes = plt.subplots(nrows=6,ncols=1,figsize=(5,8))
-  fig.suptitle('SDP %05d forecast at UTC %s'%(SDP,DF.reftime[0][:-3]))
+  fig.suptitle('{0:05d} {1:} {2:} UTC {3}'.format(SDP,FUKEN,NAME,DF.reftime[0][:-3]))
   ## 気温(degC)
   row = 0
   for c in ['TMP','DPT']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
