@@ -1,6 +1,6 @@
 /***** index.html *****/
 body { text-align: center; }
-button { border-style: none; font-weight: bold; width: 80px; border-radius: 8px; background-color: silver; }
+button { border-style: none; font-weight: bold; width: 80px; border-radius: 8px; background-color: gold; }
 
 .tabBody iframe {
   position: relative;
@@ -15,7 +15,7 @@ button { border-style: none; font-weight: bold; width: 80px; border-radius: 8px;
 
 /***** readme.html *****/
 body#readme { text-align: left; }
-body#readme h1 { border-bottom: solid 4px silver; }
+body#readme h1 { border-bottom: solid 4px gold; }
 
 
 /***** chart.html *****/
@@ -34,7 +34,7 @@ img#tenki { width: 24px; height: 24px; }
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  background-color: silver;
+  background-color: gold;
   z-index: 2;
 }
 /* 列ヘッダの固定 */
@@ -42,7 +42,7 @@ img#tenki { width: 24px; height: 24px; }
   position: -webkit-sticky;
   position: sticky;
   left: 0;
-  background-color: silver;
+  background-color: gold;
   z-index: 1;
 }
 

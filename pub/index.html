@@ -38,7 +38,6 @@ window.addEventListener('resize',iframeResize);
 <body>
 
 <div id="tabArea">
-<button onclick="tabClick('./readme.html')">ホーム</button>
 <button onclick="tabClick('./chart.html')">天気図</button>
 <button onclick="tabClick('./info/sdp_week.html')">地点予報</button>
 <!-- <button onclick="tabClick('./info/sdp_news.html')">地点詳細</button> -->
@@ -47,13 +46,14 @@ window.addEventListener('resize',iframeResize);
 <button onclick="tabClick('./info/sdp_rank.html')">注目地点</button>
 <button onclick="tabClick('./info/sdp_list.html')">地点表</button>
 <button onclick="tabClick('./info/gfs_list.html')">変数表</button>
+<button onclick="tabClick('./readme.html')">使い方</button>
 <button onclick="imaKoko('tabNode')">イマココ</button>
 </div>
 
 <hr>
 
 <div class="tabBody">
-<body><iframe id="tabNode" src="./readme.html"></iframe></body>
+<body><iframe id="tabNode" src="./chart.html"></iframe></body>
 </div>
 
 <hr>
