@@ -1,27 +1,30 @@
-/***** index.html *****/
-body { text-align: center; }
-button { border-style: none; font-weight: bold; width: 80px; border-radius: 8px; background-color: gold; }
-
-.tabBody iframe {
-  position: relative;
-  border: 0;
-  margin: 0;
-  padding: 0;
-/*
-  width: 100%;
-  height: 800px; */
+/***** common vars *****/
+:root {
+  --bg-color:#008CBA;
+  --fg-color:#FFFFFF;
 }
 
 
+/***** index.html *****/
+body { text-align:center; height:100%; }
+button { 
+ border-style:none; font-weight:bold; width:80px; border-radius:8px;
+ background-color:var(--bg-color); color:var(--fg-color);
+}
+
+.tabBody { position:relative; width:100%; height:100%; padding-top:100%; }
+.tabBody iframe { position:absolute; width:100%; height:100%; top:0; left:0; border:0; margin:0; padding:0; }
+
+
 /***** readme.html *****/
-body#readme { text-align: left; }
-body#readme h1 { border-bottom: solid 4px gold; }
+body#readme { text-align:left; }
+body#readme h1 { border-bottom: solid 4px var(--bg-color); }
 
 
 /***** chart.html *****/
-div.text1 { position: relative; z-index: 1; }
-div.plot { position: relative; z-index: -1; margin-top: 0%; }
-div.text2 { position: relative; z-index: 1; margin-top: 0%; }
+div.text1 { position:relative; z-index: 1; }
+div.plot { position:relative; z-index: -1; margin-top: 0%; }
+div.text2 { position:relative; z-index: 1; margin-top: 0%; }
 
 
 /***** table.html *****/
@@ -31,18 +34,19 @@ img#tenki { width: 24px; height: 24px; }
 .dataframe table { border: 1 }
 /* 行ヘッダの固定 */
 .dataframe thead th {
+  text-align: center; 
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  background-color: gold;
   z-index: 2;
+  background-color: var(--bg-color); color: var(--fg-color);
 }
 /* 列ヘッダの固定 */
 .dataframe tbody th {
   position: -webkit-sticky;
   position: sticky;
   left: 0;
-  background-color: gold;
   z-index: 1;
+  background-color: var(--bg-color); color: var(--fg-color);
 }
 

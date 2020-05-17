@@ -22,6 +22,7 @@ function tabClick(url) {
   const e = document.getElementById("tabNode");
   if (e) { e.src = url +"?v="+ VERSION; };
 };
+/*
 function iframeResize() {
   const e = document.getElementById("tabNode");
   if (e) {
@@ -31,6 +32,7 @@ function iframeResize() {
 };
 window.addEventListener('load',iframeResize);
 window.addEventListener('resize',iframeResize);
+*/
 ////////// SCRIPT END //////////
 </script>
 
@@ -53,7 +55,7 @@ window.addEventListener('resize',iframeResize);
 <hr>
 
 <div class="tabBody">
-<body><iframe id="tabNode" src="./chart.html"></iframe></body>
+<iframe id="tabNode" src="./chart.html"></iframe>
 </div>
 
 <hr>
