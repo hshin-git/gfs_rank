@@ -12,7 +12,7 @@ button {
  background-color:var(--bg-color); color:var(--fg-color);
 }
 
-.tabBody { position:relative; width:100%; height:100%; padding-top:100%; }
+.tabBody { position:relative; width:100%; height:100%; padding-top:150%; }
 .tabBody iframe { position:absolute; width:100%; height:100%; top:0; left:0; border:0; margin:0; padding:0; }
 
 
