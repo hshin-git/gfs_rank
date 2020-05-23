@@ -149,7 +149,7 @@ for SDP in SDP_PLOT:
   #axes[row].set_ylim(-2,2)
   ########################################################
   ## PNG保存
-  plt.savefig(OUT_PATH +"/"+ "%05d.png"%SDP)#, transparent=COM.TRANSPARENT)
+  plt.savefig(OUT_PATH +"/"+ "%05d.png"%SDP, transparent=COM.TRANSPARENT)
   #plt.savefig(OUT_PATH +"/"+ "%05d.svg"%SDP)
   plt.close(fig)
   ## CSV保存: イマココ用

@@ -9,9 +9,9 @@ TILE_PATH = "./tile"
 PLOT_PATH = "./graph"
 
 ## グラフ
-MPLSTYLE='default'
+#MPLSTYLE='default'
 #MPLSTYLE = 'bmh'
-#MPLSTYLE = 'dark_background'
+MPLSTYLE = 'dark_background'
 #MPLSTYLE = 'fivethirtyeight'
 #MPLSTYLE = 'ggplot'
 #MPLSTYLE = 'seaborn-dark'

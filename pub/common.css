@@ -1,15 +1,29 @@
 /***** common vars *****/
 :root {
-  --bg-color:#008CBA;
-  --fg-color:#FFFFFF;
+ --text-bg: gray;
+ --text-fg: white;
+ --link-fg: yellow;
+ --line-fg: silver;
+ --button-bg: silver;
+ --button-fg: black;
+}
+@media (prefers-color-scheme: dark) {
+ :root {
+  --text-bg: black;
+  --text-fg: silver;
+  --link-fg: yellow;
+  --line-fg: silver;
+  --button-bg: silver;
+  --button-fg: black;
+ }
 }
 
 
 /***** index.html *****/
-body { text-align:center; height:100%; }
-button { 
+body { text-align:center; height:100%; background:var(--text-bg); color:var(--text-fg); }
+button {
  border-style:none; font-weight:bold; width:80px; border-radius:8px;
- background-color:var(--bg-color); color:var(--fg-color);
+ background-color:var(--button-bg); color:var(--button-fg);
 }
 
 .tabBody { position:relative; width:100%; height:100%; padding-top:150%; }
@@ -18,7 +32,7 @@ button {
 
 /***** readme.html *****/
 body#readme { text-align:left; }
-body#readme h1 { border-bottom: solid 4px var(--bg-color); }
+body#readme h1 { border-bottom: solid 4px var(--button-bg); }
 
 
 /***** chart.html *****/
@@ -29,8 +43,8 @@ div.text2 { position:relative; z-index: 1; margin-top: 0%; }
 
 /***** table.html *****/
 img#tenki { width: 24px; height: 24px; }
-.dataframe a { text-decoration:none; color:blue; }
-.dataframe td { white-space: nowrap; border-bottom: 1px solid gray; }
+.dataframe a { text-decoration:none; color:var(--link-fg); }
+.dataframe td { white-space: nowrap; border-bottom: 1px solid var(--line-fg); }
 .dataframe table { border: 1 }
 /* 行ヘッダの固定 */
 .dataframe thead th {
@@ -39,7 +53,7 @@ img#tenki { width: 24px; height: 24px; }
   position: sticky;
   top: 0;
   z-index: 2;
-  background-color: var(--bg-color); color: var(--fg-color);
+  background-color: var(--button-bg); color: var(--button-fg);
 }
 /* 列ヘッダの固定 */
 .dataframe tbody th {
@@ -47,6 +61,6 @@ img#tenki { width: 24px; height: 24px; }
   position: sticky;
   left: 0;
   z-index: 1;
-  background-color: var(--bg-color); color: var(--fg-color);
+  background-color: var(--button-bg); color: var(--button-fg);
 }
 
