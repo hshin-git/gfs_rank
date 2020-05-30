@@ -161,8 +161,8 @@ for SDP in SDP_PLOT:
   DF.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP, encoding=ENCODE)
 
 ## JSON保存: イマココ用
-SDP_LIST = SDP_LIST.reset_index()
-SDP_LIST.to_json(OUT_PATH +"/"+ "sdp_list.json")
+#SDP_LIST = SDP_LIST.reset_index()
+#SDP_LIST.to_json(OUT_PATH +"/"+ "sdp_list.json")
 
 ########################################################
 print("leave:",sys.argv)
