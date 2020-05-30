@@ -16,10 +16,10 @@ GFS_PATH = "./gfs/gfs_2020042012_168.nc"
 GFS_PATH = sys.argv[1] if len(sys.argv)>1 else GFS_PATH
 OUT_PATH = COM.INFO_PATH	#"./info"
 ##
-print("argv:",sys.argv)
-print("date:",datetime.now())
-print("gfs:",GFS_PATH)
-print("out:",OUT_PATH)
+print("enter:", sys.argv)
+print(sys.argv[0], datetime.now())
+print(sys.argv[0], GFS_PATH)
+print(sys.argv[0], OUT_PATH)
 os.makedirs(OUT_PATH, exist_ok=True)
 
 
@@ -32,7 +32,7 @@ COLS = [
 # 追加属性
  'LAYERS',
  'DIMENSION',
- 'dims',
+ 'Coordinates',
 # GRIB属性
  'long_name',
  'units',
@@ -45,7 +45,13 @@ COLS = [
  'Grib2_Parameter_Name',
  'Grib2_Level_Type',
  'Grib2_Level_Desc',
- 'Grib2_Generating_Process_Type'
+ 'Grib2_Generating_Process_Type',
+# 座標属性
+ 'positive',
+ 'Grib_level_type',
+ '_CoordinateAxisType',
+ '_CoordinateZisPositive',
+ 'values',
 ]
 
 ## データフレームの準備
@@ -57,10 +63,11 @@ for k in sorted(ds.variables)[:]:
   a = v.attrs
   d = v.dims	#time,(isobalic,)lat,lon
   n = len(v.dims)
-  print(k,len(a),len(d))
+  print(sys.argv[0], k,len(a),len(d))
   # 追加属性
-  if n<3:	#time,lat,lon
+  if n<3:	#coordinate axis
     INFO.loc[k,COLS[0]] = 0
+    INFO.loc[k,COLS[-1]] = "values[%d] = %s" % (v.values.size, str(v.values) if v.values.size<35 else str(v.values[:35]) + '...')
   elif n==3:	#sea/land surface
     INFO.loc[k,COLS[0]] = 1
   elif n==4:	#isobaric surface
@@ -76,9 +83,12 @@ for k in sorted(ds.variables)[:]:
 ds.close()
 
 ## CSV保存
-INFO = INFO[INFO.LAYERS>0]
-INFO.to_csv(OUT_PATH + "/" + "gfs_list.csv",index=True)
+LIST = INFO[INFO.LAYERS>0][COLS[:-5]]
+AXIS = INFO[INFO.LAYERS==0][COLS[:5]+COLS[15:]]
+LIST.to_csv(OUT_PATH +"/"+ "gfs_list.csv",index=True)
+AXIS.to_csv(OUT_PATH +"/"+ "gfs_axis.csv",index=True)
 
 ##################################################
+print("leave:", sys.argv)
 sys.exit(0)
 

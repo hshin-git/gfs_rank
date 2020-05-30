@@ -22,17 +22,17 @@ SDP_PLOT = sys.argv[1:]
 CSV_PATH = COM.FCST_PATH	#"./forecast"
 OUT_PATH = COM.PLOT_PATH	#"./graph"
 
-print("argv:",sys.argv)
-print("date:",datetime.now())
-print("csv:",CSV_PATH)
-print("out:",OUT_PATH)
+print("enter:",sys.argv)
+print(sys.argv[0], datetime.now())
+print(sys.argv[0], CSV_PATH)
+print(sys.argv[0], OUT_PATH)
 os.makedirs(OUT_PATH, exist_ok=True)
 
 
 ########################################################
 ## 抽出地点と気象変数の指定
 ENCODE = "cp932"
-SDP_LIST = pd.read_csv("./info/sdp_list.csv",index_col="SDP",encoding=ENCODE)
+SDP_LIST = pd.read_csv(COM.INFO_PATH +"/"+ "sdp_list.csv", index_col="SDP",encoding=ENCODE)
 SDP_PLOT = SDP_LIST.index if len(SDP_PLOT)==0 else SDP_PLOT
 
 
@@ -44,12 +44,12 @@ for SDP in SDP_PLOT:
   FUKEN = SDP_LIST.loc[SDP,"FUKEN"]
   DF = pd.read_csv(CSV_PATH +"/"+ "%05d.csv"%SDP,parse_dates=[0],index_col=0)
   DF = DF[:-(len(DF)%8)]
-  print(SDP,NAME)
+  print(sys.argv[0], SDP,NAME)
   ########################################################
   ## データ準備
   ## 気温(degC)
   T0K = 273.15
-  DF['TMP'] = DF['Temperature_surface_00'] - T0K
+  DF['TMP'] = DF['Temperature_height_above_ground_00'] - T0K
   DF['DPT'] = DF['Dewpoint_temperature_height_above_ground_00'] - 273.15
   ## 雲量(0-1)
   DF['TCDC'] = DF['Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average_00'] / 100.
@@ -165,5 +165,6 @@ SDP_LIST = SDP_LIST.reset_index()
 SDP_LIST.to_json(OUT_PATH +"/"+ "sdp_list.json")
 
 ########################################################
+print("leave:",sys.argv)
 sys.exit(0)
 

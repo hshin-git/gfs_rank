@@ -37,7 +37,7 @@ GFS_DICT = {
   'Categorical_Rain_surface':	{'jpn':u"降水",'vthr':[20,50],'jcat':[u"無",u"短",u"長"],'conv':[lambda x:x*100.,'%']},
   'Categorical_Snow_surface':	{'jpn':u"降雪",'vthr':[10,50],'jcat':[u"無",u"短",u"長"],'conv':[lambda x:x*100.,'%']},
   'Wind_speed_gust_surface':	{'jpn':u"突風",'pthr':[25,75],'jcat':[u"弱",u"並",u"強"],'conv':[IDENT,'m/s']},
-  'Temperature_surface':	{'jpn':u"気温",'pthr':[25,75],'jcat':[u"低",u"並",u"高"],'conv':[lambda x:x-273.15,'C']},
+  'Temperature_height_above_ground':	{'jpn':u"気温",'pthr':[25,75],'jcat':[u"低",u"並",u"高"],'conv':[lambda x:x-273.15,'C']},
   'Relative_humidity_height_above_ground':{'jpn':u"湿度",'pthr':[25,75],'jcat':[u"低",u"並",u"高"],'conv':[IDENT,'%']},
   'Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average':{'jpn':u"雲量",'vthr':[20,80],'jcat':[u"快",u"晴",u"曇"],'conv':[IDENT,'%']},
   'Visibility_surface':		{'jpn':u"視程",'pthr':[25,75],'jcat':[u"悪",u"並",u"良"],'conv':[lambda x:x/1000.,'km']},
@@ -100,7 +100,7 @@ def JPN_SUMMARY(DAY):
 ########################################################
 ## 出力カテゴリの定義: 前記GFS_DICTに含まれる変数
 NEWS_GFS = [
-	'Temperature_surface',
+	'Temperature_height_above_ground',
 	'Relative_humidity_height_above_ground',
 	'Wind_speed_gust_surface',
 	'Categorical_Rain_surface',
@@ -118,7 +118,8 @@ for SDP in SDP_LIST.index[:]:
   NAME = SDP_LIST.loc[SDP,'NAME']
   print(NAME)
   ## 統計値
-  STAT = pd.read_csv("%s/%05d_stat.csv"%(STAT_PATH,SDP))
+  #STAT = pd.read_csv("%s/%05d_stat.csv"%(STAT_PATH,SDP))
+  STAT = pd.read_csv(DATA_PATH +"/"+ "gfs_mean3h.csv")
   PCTL = {}
   REF_COLS = []
   for v in GFS_DICT:

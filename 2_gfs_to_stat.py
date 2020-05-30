@@ -14,8 +14,8 @@ import COMMON as COM
 
 
 ###########################################
-print("argv:",sys.argv)
-print("date:",datetime.now())
+print("enter:", sys.argv)
+print(sys.argv[0], datetime.now())
 
 ## 引数の数により動作モードをスイッチ（予測か統計か）
 FORECAST = True if len(sys.argv) < 3 else False
@@ -54,10 +54,10 @@ for d in range(0,DAYS,STEP):
   if os.path.exists(GFS): GFS_PATH += [GFS]
 
 ##
-print("jst1:", JST1)
-print("jst2:", JST2)
-print("gfs_path:", GFS_PATH)
-print("out_path:", OUT_PATH)
+print(sys.argv[0], JST1)
+print(sys.argv[0], JST2)
+print(sys.argv[0], GFS_PATH)
+print(sys.argv[0], OUT_PATH)
 #sys.exit(0)
 
 ###########################################
@@ -69,9 +69,9 @@ def lat_lon_to_y_x(lat,lon,lat_,lon_):
 ###########################################
 ## 抽出地点と気象変数の指定
 ENCODE = "cp932"
-SDP_LIST = pd.read_csv("./info/sdp_list.csv",index_col="SDP",encoding=ENCODE)
-GFS_LIST = pd.read_csv("./info/gfs_list.csv",index_col="GFS",encoding=ENCODE)
-VAR_LIST = GFS_LIST[GFS_LIST.LAYERS==1].index.tolist() #+ ["Temperature_isobaric"]
+SDP_LIST = pd.read_csv(COM.INFO_PATH +"/"+ "sdp_list.csv", index_col="SDP",encoding=ENCODE)
+GFS_LIST = pd.read_csv(COM.INFO_PATH +"/"+ "gfs_list.csv", index_col="GFS",encoding=ENCODE)
+VAR_LIST = GFS_LIST[(GFS_LIST.LAYERS>=1)&(GFS_LIST.LAYERS<10)].index.tolist()
 """
 # デバッグ用: 地点と変数を制限
 SDP_LIST = SDP_LIST[:4]
@@ -96,7 +96,7 @@ for GFS in GFS_PATH:
     LAT = SDP_LIST.loc[SDP,"lat"]
     LON = SDP_LIST.loc[SDP,"lon"]
     y,x = lat_lon_to_y_x(LAT,LON,LAT_,LON_)
-    print("place: %05d %d %d %.3f %.3f %s"%(SDP,y,x,LAT,LON,NAME))
+    print(sys.argv[0], "%05d %d %d %.3f %.3f %s"%(SDP,y,x,LAT,LON,NAME))
 
     ###########################################
     # CSV用データフレームの作成
@@ -124,11 +124,11 @@ for GFS in GFS_PATH:
       DIM = len(SHAPE)
       NZ = 1 if DIM==3 else SHAPE[1]
       NT = len(INDEX)
-      ## 高さ方向のループ（気圧面量は10刻み）
-      for z in range(0,NZ,10):
+      ## 高さ方向のループ
+      for z in range(0,NZ):
         c = "%s_%02d"%(NAME,z)
         if SHAPE[0]!=NT:
-          print("skip:",NAME)
+          print(sys.argv[0], "skip",NAME)
           DATAF[c] = np.nan
         elif DIM==3:
           DATAF[c] = data_vals[:,y,x]
@@ -137,7 +137,6 @@ for GFS in GFS_PATH:
 
     ###########################################
     ## CSVファイルの保存
-    #DATAF = DATAF.fillna(1048)
     GFS_DATA[SDP] += [DATAF]
 
   ###########################################
@@ -145,8 +144,11 @@ for GFS in GFS_PATH:
   data.close()
 
 ###########################################
-GFS_STAT = {}
+PERCENTILES = np.linspace(0.01,0.99,99)
+MEAN_3H = []
+MEAN_1D = []
 for SDP in SDP_LIST.index:
+  print(sys.argv[0], SDP,"concat and save ...")
   ## データフレームを結合
   DATA = pd.concat(GFS_DATA[SDP])
   ## 時刻の重複を除去
@@ -158,7 +160,9 @@ for SDP in SDP_LIST.index:
   TEMP.index.name = 'JST'
   DATA = TEMP.join(DATA)
   ## 統計値の計算
-  STAT = DATA.describe(percentiles=np.linspace(0.01,0.99,99))
+  STAT = DATA.describe(percentiles=PERCENTILES)
+  MEAN_3H += [DATA.resample("3H").mean()]
+  MEAN_1D += [DATA.resample("1D").mean()]
   ## ファイルの保存
   if FORECAST:
     DATA.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP)
@@ -166,6 +170,13 @@ for SDP in SDP_LIST.index:
     DATA.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP)
     STAT.to_csv(OUT_PATH +"/"+ "%05d_stat.csv"%SDP)
 
+###########################################
+GFS_MEAN3H = pd.concat(MEAN_3H).describe(percentiles=PERCENTILES)
+GFS_MEAN1D = pd.concat(MEAN_1D).describe(percentiles=PERCENTILES)
+GFS_MEAN3H.to_csv(OUT_PATH +"/"+ "gfs_mean3h.csv")
+GFS_MEAN1D.to_csv(OUT_PATH +"/"+ "gfs_mean1d.csv")
+
 ##################################################
+print("leave:", sys.argv)
 sys.exit(0)
 

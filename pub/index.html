@@ -22,17 +22,15 @@ function tabClick(url) {
   const e = document.getElementById("tabNode");
   if (e) { e.src = url +"?v="+ VERSION; };
 };
-/*
 function iframeResize() {
   const e = document.getElementById("tabNode");
   if (e) {
-    e.width = window.innerWidth - 10;
+    e.width = window.innerWidth - 0;
     e.height = window.innerHeight - 80;
   }
 };
 window.addEventListener('load',iframeResize);
 window.addEventListener('resize',iframeResize);
-*/
 ////////// SCRIPT END //////////
 </script>
 
@@ -43,8 +41,8 @@ window.addEventListener('resize',iframeResize);
 <button onclick="tabClick('./chart.html')">天気図</button>
 <button onclick="tabClick('./info/sdp_week.html')">地点予報</button>
 <!-- <button onclick="tabClick('./info/sdp_news.html')">地点詳細</button> -->
-<button onclick="tabClick('./info/var_rank.html')">注目変数</button>
-<button onclick="tabClick('./info/day_rank.html')">注目日付</button>
+<!-- <button onclick="tabClick('./info/var_rank.html')">注目変数</button> -->
+<!-- <button onclick="tabClick('./info/day_rank.html')">注目日付</button> -->
 <button onclick="tabClick('./info/sdp_rank.html')">注目地点</button>
 <button onclick="tabClick('./info/sdp_list.html')">地点表</button>
 <button onclick="tabClick('./info/gfs_list.html')">変数表</button>
