@@ -1,15 +1,15 @@
 /***** common vars *****/
 :root {
- --text-bg: dimGray;
- --text-fg: ivory;
- --button-bg: indianRed;
+ --text-bg: white;
+ --text-fg: black;
+ --button-bg: royalBlue;
  --button-fg: ivory;
- --link-fg: paleTurquoise;
+ --link-fg: blue;
  --line-fg: silver;
 }
 @media (prefers-color-scheme: dark) {
  :root {
-  --text-bg: #333;
+  --text-bg: gray;
   --text-fg: ivory;
   --button-bg: dimGray;
   --button-fg: ivory;
