@@ -47,7 +47,7 @@ DF = DF.drop_duplicates(subset="SDP")
 DF = DF[DF.LOCATION.str.contains(u"気象台")]
 
 ## 緯度、経度の変換
-ROUND = 3
+ROUND = 4
 DF["lat"] = np.round(DF.LATdeg + DF.LATmin/60., decimals=ROUND)
 DF["lon"] = np.round(DF.LONdeg + DF.LONmin/60., decimals=ROUND)
 
