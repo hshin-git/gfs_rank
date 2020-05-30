@@ -97,18 +97,23 @@ for SDP in SDP_LIST.index[:]:
       row = pd.Series([SDP,NAME,d,v,PCT[d],LOG[d],VAL[d]],index=RANK.columns)
       RANK = RANK.append(row, ignore_index=True)
 
-## 大小に振れる変数を除外
-VARS = RANK.groupby(["GFS"]).mean()["PERCENTILE"] 
-VARS = VARS[(VARS<P01) | (VARS>P99)]
-RANK = RANK[[v in list(VARS.index) for v in RANK.GFS]]
 
 ##################################################
-## 事象ランキングの保存
-RANK = RANK.sort_values(["SDP","DATE","GFS"])
+## 事象リストの保存
+RANK["units"] = RANK.apply(lambda x: UNITS[x["GFS"][:-3]],axis=1)
+RANK = RANK.sort_values(["DATE","SDP","GFS"])
+RANK = RANK[["DATE","SDP","NAME","GFS","AVG","units","PERCENTILE"]]
 RANK.to_csv(OUT_PATH +"/"+ "gfs_rank.csv",encoding=ENCODE)
 
 #sys.exit(0)
 ##################################################
+## 大小に振れる変数を除外
+"""
+VARS = RANK.groupby(["GFS"]).mean()["PERCENTILE"] 
+VARS = VARS[(VARS<P01) | (VARS>P99)]
+RANK = RANK[[v in list(VARS.index) for v in RANK.GFS]]
+"""
+
 ## 集約ランキングの保存
 SCORE = "SCORE"
 RANK = RANK.rename(columns={"NAME":SCORE})
