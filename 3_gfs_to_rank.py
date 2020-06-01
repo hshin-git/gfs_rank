@@ -129,7 +129,7 @@ sRANK = RANK.groupby(["SDP"]).agg({SCORE:'count','DATE':lambda x:set(x),'GFS':la
 sRANK = sRANK.sort_values([SCORE],ascending=[False])
 sRANK = sRANK.join(SDP_LIST[["FUKEN","NAME"]])
 sRANK = sRANK.reset_index()
-sRANK = sRANK[["SDP","SCORE","FUKEN","NAME","DATE","GFS"]]
+sRANK = sRANK[["SDP","SCORE","NAME","DATE","GFS"]]
 sRANK = sRANK.rename(columns={"GFS":"#GFS"})
 sRANK.to_csv(OUT_PATH +"/"+ "sdp_rank.csv",encoding=ENCODE)
 

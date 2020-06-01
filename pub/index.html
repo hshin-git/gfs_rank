@@ -22,7 +22,7 @@ function tabClick(url) {
 };
 function iframeResize() {
   const e = document.getElementById("tabNode");
-  if (e) { e.width = window.innerWidth - 0; e.height = window.innerHeight - 80; };
+  if (e) { e.width = window.innerWidth - 0; e.height = window.innerHeight - 120; };
 };
 window.addEventListener('load',iframeResize);
 window.addEventListener('resize',iframeResize);
@@ -37,18 +37,24 @@ window.addEventListener('resize',iframeResize);
 <button onclick="tabClick('./chart.html')">天気図</button>
 <button onclick="tabClick('./info/sdp_week.html')">地点予報</button>
 <!-- <button onclick="tabClick('./info/sdp_news.html')">地点詳細</button> -->
+<br>
 <button onclick="tabClick('./info/gfs_rank.html')">注目事象</button>
 <button onclick="tabClick('./info/sdp_rank.html')">注目地点</button>
 <!-- <button onclick="tabClick('./info/day_rank.html')">注目日付</button> -->
 <button onclick="tabClick('./info/var_rank.html')">注目変数</button>
+<br>
 <button onclick="tabClick('./info/sdp_list.html')">地点表</button>
 <button onclick="tabClick('./info/gfs_list.html')">変数表</button>
 <button onclick="tabClick('./readme.html')">使い方</button>
 </div>
 
+<hr>
+
 <div class="tabBody">
 <iframe id="tabNode" src="./chart.html"></iframe>
 </div>
+
+<hr>
 
 </body>
 </html>
