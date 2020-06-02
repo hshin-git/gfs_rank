@@ -26,8 +26,8 @@ button {
  background-color:var(--button-bg); color:var(--button-fg);
 }
 hr { color:var(--button-bg); }
-
 .tabBody iframe { width:100%; border:0; }
+
 
 /***** readme.html *****/
 body#readme { text-align:left; }
@@ -35,9 +35,10 @@ body#readme h1 { border-bottom: solid 4px var(--button-bg); }
 
 
 /***** chart.html *****/
-div.text1 { position:relative; z-index: 1; }
-div.plot { position:relative; z-index: -1; margin-top: 0%; }
-div.text2 { position:relative; z-index: 1; margin-top: 0%; }
+div#chartHead { position:relative; z-index: 1; }
+div#chartBody { position:relative; z-index: -1; margin-top: 0%; }
+div#chartFoot { position:relative; z-index: 1; margin-top: 0%; }
+.chartButton { width:80px; }
 
 
 /***** table.html *****/

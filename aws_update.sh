@@ -11,7 +11,7 @@ echo "##################################################"
 GFS_INIT=$(date "+%Y%m%d12" -d "-1 days")
 GFS_PATH="gfs/gfs_"${GFS_INIT}"_168.nc"
 
-GFS_PAST=$(date "+%Y%m%d12" -d "-28 days")
+GFS_PAST=$(date "+%Y%m%d12" -d "-14 days")
 DAY_WEEK=$(date "+%w")
 
 echo "gfs_init:" $GFS_INIT

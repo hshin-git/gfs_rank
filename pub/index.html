@@ -18,7 +18,7 @@ const TODAY = new Date();
 const VERSION = TODAY.getFullYear() +"."+ (TODAY.getMonth()+1) +"."+ TODAY.getDate() +"."+ TODAY.getHours();
 function tabClick(url) {
   const e = document.getElementById("tabNode");
-  if (e) { e.src = url +"?v="+ VERSION; };
+  if (e) { e.src = url +"?"+ VERSION; };
 };
 function iframeResize() {
   const e = document.getElementById("tabNode");
@@ -33,7 +33,7 @@ window.addEventListener('resize',iframeResize);
 </head>
 <body>
 
-<div id="tabArea">
+<div id="tabHead">
 <button onclick="tabClick('./chart.html')">天気図</button>
 <button onclick="tabClick('./info/sdp_week.html')">地点予報</button>
 <!-- <button onclick="tabClick('./info/sdp_news.html')">地点詳細</button> -->
@@ -58,4 +58,3 @@ window.addEventListener('resize',iframeResize);
 
 </body>
 </html>
-
