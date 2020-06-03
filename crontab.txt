@@ -21,3 +21,5 @@
 # 
 # m h  dom mon dow   command
 0 5  * * *  cd /home/ubuntu/gfs_rank; /bin/bash ./aws_update.sh > ./pub/crontab.log 2>&1
+0 *  * * *  cd /home/ubuntu/gsi_maps; /home/ubuntu/anaconda3/bin/python 3_sdp_to_layer.py
+9 *  * * *  cd /home/ubuntu/jma_pull; /bin/bash ./aws_update.sh > ./pub/crontab-`date +\%H`.log 2>&1
