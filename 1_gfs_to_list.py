@@ -51,6 +51,7 @@ COLS = [
  'Grib_level_type',
  '_CoordinateAxisType',
  '_CoordinateZisPositive',
+ 'length',
  'values',
 ]
 
@@ -67,7 +68,8 @@ for k in sorted(ds.variables)[:]:
   # 追加属性
   if n<3:	#coordinate axis
     INFO.loc[k,COLS[0]] = 0
-    INFO.loc[k,COLS[-1]] = "values[%d] = %s" % (v.values.size, str(v.values) if v.values.size<35 else str(v.values[:35]) + '...')
+    INFO.loc[k,COLS[-2]] = v.values.size
+    INFO.loc[k,COLS[-1]] = ";".join(["%s"%e for e in (v.values[:min(10,v.values.size)] if n>0 else [v.values])])
   elif n==3:	#sea/land surface
     INFO.loc[k,COLS[0]] = 1
   elif n==4:	#isobaric surface
@@ -83,7 +85,7 @@ for k in sorted(ds.variables)[:]:
 ds.close()
 
 ## CSV保存
-LIST = INFO[INFO.LAYERS>0][COLS[:-5]]
+LIST = INFO[INFO.LAYERS>0][COLS[:-6]]
 AXIS = INFO[INFO.LAYERS==0][COLS[:5]+COLS[15:]]
 LIST.to_csv(OUT_PATH +"/"+ "gfs_list.csv",index=True)
 AXIS.to_csv(OUT_PATH +"/"+ "gfs_axis.csv",index=True)

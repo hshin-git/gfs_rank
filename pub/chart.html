@@ -9,13 +9,15 @@
 
 <script>
 ////////// SCRIPT BEGIN //////////
-const TODAY = new Date();
-const VERSION = TODAY.getFullYear() +"."+ (TODAY.getMonth()+1) +"."+ TODAY.getDate();
+const NOW = new Date();
+const INZ = new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()-1,21);
+const SEQ = Math.round((NOW - INZ)/1000/3600/6)*6;
+const VERSION = NOW.getFullYear() +"."+ (NOW.getMonth()+1) +"."+ NOW.getDate();
 const BASE = "./chart";
 const CHART = ["Surface_HILO_Symbol","850hPa_Temperature_Advection","700hPa_RELH_Winds","500hPa_HGHT_Winds","300hPa_HGHT_Winds"];
 const CYCLE = 24*7;
 var alt = 0;
-var seq = 0;
+var seq = SEQ;
 function _lift(h) {
   alt = (alt + h + CHART.length) % CHART.length;
   url = BASE +"/"+ CHART[alt]  +"_"+ ('000'+seq).slice(-3) + ".png";
@@ -37,7 +39,7 @@ function _next(h) {
 
 
 </head>
-<body>
+<body onload="_next(0);">
 
 <div id="chartHead">
 <button onclick="_lift(-1);" class="chartButton">下層</button>
