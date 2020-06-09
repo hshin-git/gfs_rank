@@ -11,7 +11,7 @@ echo "##################################################"
 GFS_INIT=$(date "+%Y%m%d12" -d "-1 days")
 GFS_PATH="gfs/gfs_"${GFS_INIT}"_168.nc"
 
-GFS_PAST=$(date "+%Y%m%d12" -d "-14 days")
+GFS_PAST=$(date "+%Y%m%d12" -d "-7 days")
 DAY_WEEK=$(date "+%w")
 
 echo "gfs_init:" $GFS_INIT
@@ -56,7 +56,7 @@ $DEBUG $PYTHON 4_csv_to_html.py ./info/*.csv ./graph/*.csv
 
 echo "##################################################"
 ##### GFS天気図の作成: gfs/gfs_*.nc -> chart/*.png
-for t in `seq 0 2 56`
+for t in $(seq 0 1 56)
 do
   echo chart $t
   ##### Surface
@@ -85,19 +85,18 @@ echo "##################################################"
 echo "##################################################"
 ##### 定期メンテナンス処理
 ## CSVファイルの保存: info/*.csv, forecast/*.csv -> data/*.zip
-$DEBUG zip ./data/${GFS_INIT}.zip info/*.csv forecast/*.csv
+$DEBUG zip ./data/${GFS_INIT}.zip info/*.csv forecast/*.csv chart/*_000.png chart/*_012.png
 
 ## CSVファイルの更新: conf/*.csv, gfs/gfs_*.nc -> hindcast/*.csv
 if [ $DAY_WEEK = 0 ]; then 
-$DEBUG $PYTHON 2_gfs_to_stat.py $GFS_PAST $GFS_INIT 7
+$DEBUG $PYTHON 2_gfs_to_stat.py $GFS_PAST $GFS_INIT 3
 fi
 
 ## GFSファイルの削除: gfs/gfs_old.nc -> null
-for p in $(seq 1 1 30); do
+for p in $(seq 1 1 14); do
 OUT_DATE=$(date "+%Y%m%d12" -d "${GFS_PAST:0:-2} -$p days")
 gfs="./gfs/gfs_${OUT_DATE}_168.nc"
 if [ -e $gfs ]; then
-echo removing: $gfs
 $DEBUG rm $gfs
 fi
 done

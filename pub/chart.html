@@ -11,7 +11,7 @@
 ////////// SCRIPT BEGIN //////////
 const NOW = new Date();
 const INZ = new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()-1,21);
-const SEQ = Math.round((NOW - INZ)/1000/3600/6)*6;
+const SEQ = Math.round((NOW - INZ)/1000/3600/3)*3;
 const VERSION = NOW.getFullYear() +"."+ (NOW.getMonth()+1) +"."+ NOW.getDate();
 const BASE = "./chart";
 const CHART = ["Surface_HILO_Symbol","850hPa_Temperature_Advection","700hPa_RELH_Winds","500hPa_HGHT_Winds","300hPa_HGHT_Winds"];
@@ -55,8 +55,8 @@ function _next(h) {
 
 <div id="chartFoot">
 <button onclick="_lift(-1);" class="chartButton">下層</button>
-<button onclick="_next(-6);" class="chartButton">6h前</button>
-<button onclick="_next(6);" class="chartButton">6h後</button>
+<button onclick="_next(-3);" class="chartButton">3h前</button>
+<button onclick="_next(3);" class="chartButton">3h後</button>
 <button onclick="_lift(1);" class="chartButton">上層</button>
 </div>
 
