@@ -15,7 +15,7 @@ import COMMON as COM
 
 ###########################################
 print("enter:", sys.argv)
-print(sys.argv[0], datetime.now())
+print("now:", datetime.now())
 
 ## 引数の数により動作モードをスイッチ（予測か統計か）
 FORECAST = True if len(sys.argv) < 3 else False
@@ -25,7 +25,7 @@ NOW = datetime.now()
 JST1 = datetime(NOW.year,NOW.month,NOW.day,0)
 JST1 = datetime.strptime(sys.argv[1][:8],"%Y%m%d") if len(sys.argv) > 1 else JST1
 
-JST2 = JST1 + timedelta(days=7)
+JST2 = JST1 + timedelta(days=COM.GFS_DAYS)
 JST2 = datetime.strptime(sys.argv[2][:8],"%Y%m%d") + timedelta(days=1) if len(sys.argv) > 2 else JST2
 
 STEP = 1
@@ -61,10 +61,10 @@ for d in range(0,DAYS,STEP):
   if os.path.exists(GFS): GFS_PATH += [GFS]
 
 ##
-print(sys.argv[0], UTC1)
-print(sys.argv[0], UTC2)
-print(sys.argv[0], GFS_PATH)
-print(sys.argv[0], OUT_PATH)
+print("utc1:", UTC1)
+print("utc2:", UTC2)
+print("gfs:", GFS_PATH)
+print("out:", OUT_PATH)
 #sys.exit(0)
 
 ###########################################

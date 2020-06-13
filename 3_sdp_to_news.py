@@ -21,7 +21,7 @@ DATA_PATH = COM.FCST_PATH	#"./forecast"
 
 ## カテゴリ予報の出力先
 OUT_PATH = COM.INFO_PATH	#"./info"
-print("argv:",sys.argv)
+print("enter:",sys.argv)
 print("date:",datetime.now())
 print("in1:",STAT_PATH)
 print("in2:",DATA_PATH)
@@ -30,122 +30,46 @@ os.makedirs(OUT_PATH, exist_ok=True)
 
 
 ########################################################
-## カテゴリ予報の対象変数
-IDENT = lambda x: x
-GFS_DICT = {
-  ## GFS変数名: {'jpn':変数名,'vthr':[絶対閾値,...],'pthr':[相対閾値,...],'jcat':[カテゴリ名,...],'conv':[変換関数,単位]}
-  'Categorical_Rain_surface':	{'jpn':u"降水",'vthr':[20,50],'jcat':[u"無",u"短",u"長"],'conv':[lambda x:x*100.,'%']},
-  'Categorical_Snow_surface':	{'jpn':u"降雪",'vthr':[10,50],'jcat':[u"無",u"短",u"長"],'conv':[lambda x:x*100.,'%']},
-  'Wind_speed_gust_surface':	{'jpn':u"突風",'pthr':[25,75],'jcat':[u"弱",u"並",u"強"],'conv':[IDENT,'m/s']},
-  'Temperature_height_above_ground':	{'jpn':u"気温",'pthr':[25,75],'jcat':[u"低",u"並",u"高"],'conv':[lambda x:x-273.15,'C']},
-  'Relative_humidity_height_above_ground':{'jpn':u"湿度",'pthr':[25,75],'jcat':[u"低",u"並",u"高"],'conv':[IDENT,'%']},
-  'Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average':{'jpn':u"雲量",'vthr':[20,80],'jcat':[u"快",u"晴",u"曇"],'conv':[IDENT,'%']},
-  'Visibility_surface':		{'jpn':u"視程",'pthr':[25,75],'jcat':[u"悪",u"並",u"良"],'conv':[lambda x:x/1000.,'km']},
-#  'Sunshine_Duration_surface':{'jpn':u"日照時間"},
-#  'Dewpoint_temperature_height_above_ground':{'jpn':"露点温度"},
-#  'Precipitable_water_entire_atmosphere_single_layer':{'jpn':u"可降水量"},
-#  'Total_cloud_cover_high_cloud_Mixed_intervals_Average':{'jpn':u"高層雲量"},
-#  'Total_cloud_cover_middle_cloud_Mixed_intervals_Average':{'jpn':u"中層雲量"},
-#  'Total_cloud_cover_low_cloud_Mixed_intervals_Average':{'jpn':u"低層雲量"},
-#  'Total_ozone_entire_atmosphere_single_layer':{'jpn':u"オゾン量"},
-}
-########################################################
-## 数値予報からカテゴリ予報へ: 気象要素ごと
-def JPN_CATEGORY(DAY,GFS_COL):
-  JPN_ROW = []
-  for v in GFS_COL:
-    DICT = GFS_DICT[v]
-    v0 =  v + "_00"
-    jpn = DICT['jpn']
-    ##
-    unit = ""
-    conv = lambda x: x
-    conv = DICT['conv'][0] if 'conv' in DICT else conv
-    unit = DICT['conv'][1] if 'conv' in DICT else unit
-    ref = ":%.f%s" % (conv(DAY[v0]),unit)
-    ## カテゴリ閾値の設定
-    if 'vthr' in DICT:
-      # 絶対値
-      val = conv(DAY[v0])
-      thr = DICT['vthr']
-      cat = DICT['jcat']
-    elif 'pthr' in DICT:
-      # 相対値
-      val = DAY[v]
-      thr = DICT['pthr']
-      cat = DICT['jcat']
-    ## カテゴリ値へ
-    ret = cat[len(thr)]
-    for n in range(0,len(thr)):
-      if val < thr[n]:
-        ret = cat[n]
-        break
-    JPN_ROW += [ret+ref]
-    #print(v,val,thr)
-  return JPN_ROW
-
-## 数値予報からカテゴリ予報へ: 最終的な天気
-def JPN_SUMMARY(DAY):
-  CLOUD,RAIN,SNOW = JPN_CATEGORY(DAY,[
-	'Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average',
-	'Categorical_Rain_surface',
-	'Categorical_Snow_surface'])
-  ret = CLOUD[0]
-  if not SNOW.startswith(u"無"):
-    ret = u"雪"
-  elif not RAIN.startswith(u"無"):
-    ret = u"雨"
-  return ret
+## カテゴリ予報
+CRAIN = 'Categorical_Rain_surface_00'
+CSNOW = 'Categorical_Snow_surface_00'
+TCDC = 'Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average_00'
+REF_COLS = [CRAIN,CSNOW,TCDC]
+## 天気の判別ルール
+def TENKI(day):
+  if day[CSNOW]>0.1:
+    return "雪"
+  elif day[CRAIN]>0.1:
+    return "雨"
+  elif day[TCDC]>80.0:
+    return "曇"
+  elif day[TCDC]>20.0:
+    return "晴"
+  else:
+    return "快"
 
 ########################################################
-## 出力カテゴリの定義: 前記GFS_DICTに含まれる変数
-NEWS_GFS = [
-	'Temperature_height_above_ground',
-	'Relative_humidity_height_above_ground',
-	'Wind_speed_gust_surface',
-	'Categorical_Rain_surface',
-	'Categorical_Snow_surface',
-	'Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average',
-	'Visibility_surface'
-]
 ## 出力データフレームの作成
-NEWS_JPN = [GFS_DICT[v]['jpn'] for v in NEWS_GFS]
-NEWS = pd.DataFrame([],columns=["SDP","FUKEN","NAME","DATE",u"天気"]+NEWS_JPN)
+NEWS = pd.DataFrame([],columns=["SDP","FUKEN","NAME","DATE",u"天気"])
 
 #SDP_LIST = SDP_LIST[20:25]
 for SDP in SDP_LIST.index[:]:
   FUKEN = SDP_LIST.loc[SDP,'FUKEN']
   NAME = SDP_LIST.loc[SDP,'NAME']
   print(NAME)
-  ## 統計値
-  #STAT = pd.read_csv("%s/%05d_stat.csv"%(STAT_PATH,SDP))
-  STAT = pd.read_csv(DATA_PATH +"/"+ "gfs_mean3h.csv")
-  PCTL = {}
-  REF_COLS = []
-  for v in GFS_DICT:
-    v0 = "%s_00"%v
-    REF_COLS += [v0]
-    # パーセンタイル変換(気象要素数値→パーセンタイル値[0-100])
-    PCTL[v] = np.vectorize(lambda x: np.searchsorted(STAT.loc[3:103,v0].values, x))
   ## 最新値
   DATA = pd.read_csv("%s/%05d.csv"%(DATA_PATH,SDP),parse_dates=[0],index_col=0)
   DATA = DATA[REF_COLS]
-  #DATA = DATA.dropna()
-  DATA = DATA[1:]	# 1日8コマへ整列
-  ## 気象量を相対値に変換
-  for v in GFS_DICT:
-    v0 = "%s_00"%v
-    DATA[v] = PCTL[v](DATA[v0])
+  DATA = DATA[1:]	# 1日8コマへ整列（前日21:00を落とす）
   ## 日毎の統計値を計算
-  AVG = DATA.resample('1D').mean()
+  DATA = DATA.resample('1D').mean()
   ## 日毎の要約文を作成
-  for d in AVG.index:
-    avg = AVG.loc[d]
-    tenki_cat = JPN_SUMMARY(avg)
-    items_cat = JPN_CATEGORY(avg,NEWS_GFS)
-    row = pd.Series([SDP,FUKEN,NAME,d]+[tenki_cat]+items_cat,index=NEWS.columns)
+  for d in DATA.index:
+    avg = DATA.loc[d]
+    tenki = TENKI(avg)
+    row = pd.Series([SDP,FUKEN,NAME,d,tenki],index=NEWS.columns)
     NEWS = NEWS.append(row,ignore_index=True)
-    print(d,NAME,tenki_cat,items_cat)
+    print(d,NAME,tenki)
   ##
 
 ########################################################
@@ -179,5 +103,6 @@ WEEK = pd.DataFrame(VALS.T,columns=COLS)
 WEEK.to_csv(OUT_PATH +"/"+ "sdp_week.csv",encoding=ENCODE,index=False)
 
 ########################################################
+print("leave:",sys.argv)
 sys.exit(0)
 

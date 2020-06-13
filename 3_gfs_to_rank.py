@@ -20,10 +20,10 @@ DATA_PATH = COM.FCST_PATH	#"./forecast"
 ## ランキング結果の出力先
 OUT_PATH = COM.INFO_PATH	#"./info"
 print("enter:", sys.argv)
-print(sys.argv[0], datetime.now())
-print(sys.argv[0], STAT_PATH)
-print(sys.argv[0], DATA_PATH)
-print(sys.argv[0], OUT_PATH)
+print("now:", datetime.now())
+print("in1:", STAT_PATH)
+print("in2:", DATA_PATH)
+print("out:", OUT_PATH)
 os.makedirs(OUT_PATH, exist_ok=True)
 
 
