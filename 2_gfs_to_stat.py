@@ -21,8 +21,9 @@ print(sys.argv[0], datetime.now())
 FORECAST = True if len(sys.argv) < 3 else False
 
 ## コマンドライン引数: 開始日、終了日、ステップ
-JST1 = datetime.now()
-JST1 = datetime.strptime(sys.argv[1][:8],"%Y%m%d") if len(sys.argv) > 1 else datetime(JST1.year,JST1.month,JST1.day,0)
+NOW = datetime.now()
+JST1 = datetime(NOW.year,NOW.month,NOW.day,0)
+JST1 = datetime.strptime(sys.argv[1][:8],"%Y%m%d") if len(sys.argv) > 1 else JST1
 
 JST2 = JST1 + timedelta(days=7)
 JST2 = datetime.strptime(sys.argv[2][:8],"%Y%m%d") + timedelta(days=1) if len(sys.argv) > 2 else JST2
@@ -39,23 +40,29 @@ os.makedirs(OUT_PATH, exist_ok=True)
 ###########################################
 ## GFSファイルの列挙
 DAYS = (JST2-JST1).days
-TIME_NAME = "JST"
-TIME_ZONE = 9
-UTC1 = JST1 - timedelta(hours=TIME_ZONE)
-UTC2 = JST2 - timedelta(hours=TIME_ZONE)
+CSV_TIME = COM.CSV_TIME
+CSV_ZONE = COM.CSV_ZONE
+GFS_INIT = COM.GFS_INIT
+GFS_DAYS = COM.GFS_DAYS
+GFS_TIME = 'UTC'
 
-GFS_INIT = 12
-GFS_DAYS = 7
+## JST1を含む直近のUTC1
+UTC1 = JST1 + timedelta(hours=GFS_INIT)
+UTC2 = JST2 + timedelta(hours=GFS_INIT)
+while UTC1 + timedelta(hours=9) > JST1:
+  UTC1 -= timedelta(days=1)
+  UTC2 -= timedelta(days=1)
+
 GFS_PATH = []
-GFS_ROOT = "./gfs"
+GFS_ROOT = COM.DATA_PATH
 for d in range(0,DAYS,STEP):
   UTC = UTC1 + timedelta(days=d)
   GFS = GFS_ROOT +"/"+ "gfs_%s%02d_%03d.nc"%(UTC.strftime("%Y%m%d"),GFS_INIT,24*GFS_DAYS)
   if os.path.exists(GFS): GFS_PATH += [GFS]
 
 ##
-print(sys.argv[0], JST1)
-print(sys.argv[0], JST2)
+print(sys.argv[0], UTC1)
+print(sys.argv[0], UTC2)
 print(sys.argv[0], GFS_PATH)
 print(sys.argv[0], OUT_PATH)
 #sys.exit(0)
@@ -112,8 +119,8 @@ for GFS in GFS_PATH:
 
     INDEX = pd.date_range(START, END, freq=FREQ)
     DATAF = pd.DataFrame(index=INDEX)
-    DATAF.index = DATAF.index + timedelta(hours=TIME_ZONE)
-    DATAF.index.name = TIME_NAME
+    DATAF.index = DATAF.index
+    DATAF.index.name = GFS_TIME
 
     DATAF["reftime"] = reftime_vals
 
@@ -152,13 +159,14 @@ for SDP in SDP_LIST.index:
   ## データフレームを結合
   DATA = pd.concat(GFS_DATA[SDP])
   ## 時刻の重複を除去
-  DATA[TIME_NAME] = DATA.index
-  DATA = DATA.drop_duplicates(subset=TIME_NAME,keep='last')
-  DATA = DATA.drop(columns=TIME_NAME)
+  DATA[GFS_TIME] = DATA.index
+  DATA = DATA.drop_duplicates(subset=GFS_TIME,keep='last')
+  DATA = DATA.drop(columns=GFS_TIME)
   ## 指定期間のデータフレームへ
-  TEMP = pd.DataFrame(index=pd.date_range(JST1,JST2,freq=FREQ))
-  TEMP.index.name = 'JST'
+  TEMP = pd.DataFrame(index=pd.date_range(UTC1,UTC2,freq=FREQ))
   DATA = TEMP.join(DATA)
+  DATA.index.name = CSV_TIME
+  DATA.index = DATA.index + timedelta(hours=CSV_ZONE)
   ## 統計値の計算
   STAT = DATA.describe(percentiles=PERCENTILES)
   MEAN_3H += [DATA.resample("3H").mean()]
@@ -168,7 +176,7 @@ for SDP in SDP_LIST.index:
     DATA.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP)
   else:
     DATA.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP)
-    STAT.to_csv(OUT_PATH +"/"+ "%05d_stat.csv"%SDP)
+    #STAT.to_csv(OUT_PATH +"/"+ "%05d_stat.csv"%SDP)
 
 ###########################################
 GFS_MEAN3H = pd.concat(MEAN_3H).describe(percentiles=PERCENTILES)

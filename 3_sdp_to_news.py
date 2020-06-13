@@ -131,7 +131,7 @@ for SDP in SDP_LIST.index[:]:
   DATA = pd.read_csv("%s/%05d.csv"%(DATA_PATH,SDP),parse_dates=[0],index_col=0)
   DATA = DATA[REF_COLS]
   #DATA = DATA.dropna()
-  DATA = DATA[:-(len(DATA)%8)]	# 1日8コマへ整列
+  DATA = DATA[1:]	# 1日8コマへ整列
   ## 気象量を相対値に変換
   for v in GFS_DICT:
     v0 = "%s_00"%v

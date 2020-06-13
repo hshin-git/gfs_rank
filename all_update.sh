@@ -88,9 +88,9 @@ echo "##################################################"
 $DEBUG zip ./data/${GFS_INIT}.zip info/*.csv forecast/*.csv chart/*_000.png chart/*_012.png
 
 ## CSVファイルの更新: conf/*.csv, gfs/gfs_*.nc -> hindcast/*.csv
-if [ $DAY_WEEK = 0 ]; then 
-$DEBUG $PYTHON 2_gfs_to_stat.py $GFS_PAST $GFS_INIT 3
-fi
+#if [ $DAY_WEEK = 0 ]; then 
+#$DEBUG $PYTHON 2_gfs_to_stat.py $GFS_PAST $GFS_INIT 3
+#fi
 
 ## GFSファイルの削除: gfs/gfs_old.nc -> null
 for p in $(seq 1 1 14); do

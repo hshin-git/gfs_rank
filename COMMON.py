@@ -1,4 +1,4 @@
-## 出力先
+## 出力先のパラメータ
 DATA_PATH = "./gfs"
 CONF_PATH = "./conf"
 INFO_PATH = "./info"
@@ -8,7 +8,13 @@ CHRT_PATH = "./chart"
 TILE_PATH = "./tile"
 PLOT_PATH = "./graph"
 
-## グラフ
+## 時刻のパラメータ
+GFS_INIT = 12
+GFS_DAYS = 7
+CSV_TIME = 'JST'
+CSV_ZONE = 9
+
+## グラフのパラメータ
 MPLSTYLE='default'
 #MPLSTYLE = 'dark_background'
 #MPLSTYLE = 'bmh'
@@ -16,7 +22,7 @@ MPLSTYLE='default'
 #MPLSTYLE = 'ggplot'
 #MPLSTYLE = 'seaborn-dark'
 
-## 天気図
+## 天気図のパラメータ
 AREA = [115,155,20+0,50]	# WEST,EAST,SOUTH,NORTH
 FIGSIZE = (12,10)
 SHRINK = 0.9

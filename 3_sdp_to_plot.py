@@ -83,6 +83,8 @@ for SDP in SDP_PLOT:
   DF['LFTX'] = DF['Surface_Lifted_Index_surface_00']
   ## 湿度(%)
   DF['RH'] = DF['Relative_humidity_height_above_ground_00']
+  ## 暑さ指数(degC)
+  DF['WBGT'] = 0.735*DF['TMP'] + 0.0374*DF['RH'] + 0.00292*DF['TMP']*DF['RH'] + 7.619*DF['SWD'] - 4.557*DF['SWD']*DF['SWD'] - 0.0572*(DF['GUST']/2.0) - 4.064
   ########################################################
   ## プロット作成
   #plt.ticklabel_format(useLocale=False)
@@ -90,7 +92,7 @@ for SDP in SDP_PLOT:
   fig.suptitle('{0:05d} {1:} {2:} UTC {3}'.format(SDP,FUKEN,NAME,DF.reftime[0][:-3]))
   ## 気温(degC)
   row = 0
-  for c in ['TMP','DPT']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
+  for c in ['TMP','DPT','WBGT']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
   axes[row].set_ylabel("Temp. (C)")
   axes[row].grid(True)
   axes[row].legend(loc='right')
@@ -152,17 +154,12 @@ for SDP in SDP_PLOT:
   plt.savefig(OUT_PATH +"/"+ "%05d.png"%SDP, transparent=COM.TRANSPARENT)
   #plt.savefig(OUT_PATH +"/"+ "%05d.svg"%SDP)
   plt.close(fig)
-  ## CSV保存: イマココ用
-  #DF = DF[["TMP","DPT","SWD","LWD","CRAIN","CSNOW","CICEP","TCDC","VIS","GUST"]]
+  ## CSV保存 for GSI Maps
   DF["TNK"] = DF.apply(lambda x: (u"雪" if x.CSNOW else (u"雨" if x.CRAIN else (u"曇" if x.TCDC>0.8 else (u"晴" if x.TCDC>0.2 else u"快")))), axis=1)
-  COL = {"TNK":u"天気","TMP":u"気温","RH":u"湿度","TCDC":u"雲量","SWD":u"日射","GUST":u"突風","VIS":u"視程"}
+  COL = {"TNK":u"天気","TMP":u"気温","RH":u"湿度","TCDC":u"雲量","SWD":u"日射","GUST":u"突風","VIS":u"視程","WBGT":u"暑さ",}
   DF = DF[list(COL)]
   DF = DF.rename(columns=COL)
   DF.to_csv(OUT_PATH +"/"+ "%05d.csv"%SDP, encoding=ENCODE)
-
-## JSON保存: イマココ用
-#SDP_LIST = SDP_LIST.reset_index()
-#SDP_LIST.to_json(OUT_PATH +"/"+ "sdp_list.json")
 
 ########################################################
 print("leave:",sys.argv)

@@ -10,7 +10,7 @@
 <script>
 ////////// SCRIPT BEGIN //////////
 const NOW = new Date();
-const INZ = new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()-1,21);
+const INZ = new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()-(NOW.getHours()<6?2:1),21);
 const SEQ = Math.round((NOW - INZ)/1000/3600/3)*3;
 const VERSION = NOW.getFullYear() +"."+ (NOW.getMonth()+1) +"."+ NOW.getDate();
 const BASE = "./chart";
