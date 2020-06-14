@@ -16,26 +16,24 @@ print("date:",datetime.now())
 ENCODE = "cp932"
 
 HEADER = '''
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>dataframe</title>
 <link rel="stylesheet" type="text/css" href="../common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script> $(document).ready( function () { $('.dataframe').DataTable({ "scrollX":true, "stateSave":true, "order":[], }); } ); </script>
+</head>
+<body>
 '''
 
 FOOTER = '''
-<p>This document was created at JST {}.</p>
+<p>This document was created at JST {0:%Y-%d-%m %H:%M:%S}.</p>
+</body>
+</html>
 '''
-
-##################################################
-## GFS変数のアドホック処理
-VAR_RANK = pd.read_csv("./info/var_rank.csv")
-VAR_TEXT = {}
-for i in VAR_RANK.index:
-  v = VAR_RANK.loc[i,"GFS"][:-3]
-  p = VAR_RANK.loc[i,"PERCENTILE"]
-  if p > 90:
-    VAR_TEXT[v] = "is large."
-  elif p < 10:
-    VAR_TEXT[v] = "is small."
-  else:
-    VAR_TEXT[v] = "is large or small."
 
 ##################################################
 ## 天気テキスト
@@ -77,12 +75,12 @@ def _ICONIFY(s): return TENKI_ICONS[s[0]] if s[0] in TENKI_ICONS else s
 FORMATTERS = {
   "JST": lambda x: _JST_PID(x),
   "SDP": lambda x: _SDP_HREF(x), 
-  "GFS": lambda x: _MAPandJOIN(_GFS_HREF,sorted(_SETtoLIST(_NORMALIZE(x)))),
-  "#GFS": lambda x: _MAPandJOIN(_GFS_HREF2,sorted(_SETtoLIST(_NORMALIZE(x)))),
-  "#SDP": lambda x: _MAPandJOIN(_SDP_HREF,sorted(_SETtoLIST(_NORMALIZE(x)))),
+#"GFS": lambda x: _MAPandJOIN(_GFS_HREF,sorted(_SETtoLIST(_NORMALIZE(x)))),
+#"#GFS": lambda x: _MAPandJOIN(_GFS_HREF2,sorted(_SETtoLIST(_NORMALIZE(x)))),
+#"#SDP": lambda x: _MAPandJOIN(_SDP_HREF,sorted(_SETtoLIST(_NORMALIZE(x)))),
   "DATE": lambda x: _MAPandJOIN(lambda x:x, sorted(_SETtoLIST(_NORMALIZE(x)))),
-  u"天気":_ICONIFY,
-  u"月":_ICONIFY, u"火":_ICONIFY, u"水":_ICONIFY, u"木":_ICONIFY, u"金":_ICONIFY, u"土":_ICONIFY, u"日":_ICONIFY,
+  "天気":_ICONIFY,
+  "月":_ICONIFY, "火":_ICONIFY, "水":_ICONIFY, "木":_ICONIFY, "金":_ICONIFY, "土":_ICONIFY, "日":_ICONIFY,
 }
 
 ## 出力時の長さ制限なし
@@ -95,24 +93,27 @@ for src in CSV_LIST:
   name,ext = os.path.splitext(base)
   dst = path +"/"+ name +".html"
   print(path,base,name,ext,dst)
-  ##
+  ## format csv
   CSV = pd.read_csv(src,encoding=ENCODE)
   COLS = [c for c in CSV.columns if not c.startswith("Unnamed:")]
   CSV = CSV[COLS]
-  ##
-  with open(dst,'w') as f:
-    f.write(
-	HEADER
-	+ CSV.to_html(index_names=False,
+  ## format html
+  html = HEADER
+  html += CSV.to_html(index_names=False,
 		table_id=name,
 		float_format="%.1f",
 		formatters=FORMATTERS,
 		render_links=True,
 		escape=False,
+		index=False,
 		show_dimensions=True,
+		classes="compact row-border stripe",
 		border=0)
-	+ FOOTER.format(datetime.now())
-	)
+  html += FOOTER.format(datetime.now())
+  ## write html
+  with open(dst,'w') as f:
+    f.write(html)
+    f.close()
 
 ##################################################
 sys.exit(0)

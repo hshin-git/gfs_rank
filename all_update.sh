@@ -50,7 +50,7 @@ $DEBUG $PYTHON 3_sdp_to_plot.py
 
 echo "##################################################"
 ##### HTML文書の作成: info/*.csv -> info/*.html
-$DEBUG $PYTHON 4_csv_to_html.py ./info/*.csv ./graph/*.csv
+$DEBUG $PYTHON 4_csv_to_html.py ./info/*.csv
 #exit
 
 

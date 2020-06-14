@@ -70,7 +70,7 @@ for v in STAT.columns[1:]:
 
 ##################################################
 ## ランキングの計算処理
-RANK = pd.DataFrame([],columns=["SDP","NAME","DATE","GFS","PERCENTILE","LOG10KDE","AVG"])
+RANK = pd.DataFrame([],columns=["SDP","FUKEN","NAME","DATE","GFS","PERCENTILE","LOG10KDE","AVG"])
 
 ## ランク計算パラメータ
 P01,P99,KDE,EPS = 1.,99.,1e-4,1e-300
@@ -78,6 +78,7 @@ P01,P99,KDE,EPS = 1.,99.,1e-4,1e-300
 #SDP_LIST = SDP_LIST[20:25]
 for SDP in SDP_LIST.index[:]:
   NAME = SDP_LIST.loc[SDP,'NAME']
+  FUKEN = SDP_LIST.loc[SDP,'FUKEN']
   ##################################################
   ## 予報値
   DATA = pd.read_csv("%s/%05d.csv"%(DATA_PATH,SDP),parse_dates=[0],index_col=0)
@@ -94,23 +95,26 @@ for SDP in SDP_LIST.index[:]:
     COND = ((PCT<P01) | (PCT>P99)) & (LOG>-np.log10(KDE))
     for d in COND[COND].index:
       print(sys.argv[0], SDP,NAME,d,v,PCT[d],LOG[d],VAL[d])
-      row = pd.Series([SDP,NAME,d,v,PCT[d],LOG[d],VAL[d]],index=RANK.columns)
+      row = pd.Series([SDP,FUKEN,NAME,d,v,PCT[d],LOG[d],VAL[d]],index=RANK.columns)
       RANK = RANK.append(row, ignore_index=True)
 
 ##################################################
+"""
 ## 大小に振れる変数を除外
 VARS = RANK.groupby(["GFS"]).mean()["PERCENTILE"] 
 VARS = VARS[(VARS<P01) | (VARS>P99)]
 RANK = RANK[[v in list(VARS.index) for v in RANK.GFS]]
+"""
 
 ## 事象リストの保存
 RANK["units"] = RANK.apply(lambda x: UNITS[x["GFS"][:-3]],axis=1)
 RANK = RANK.sort_values(["DATE","SDP","GFS"])
-RANK = RANK[["DATE","SDP","NAME","GFS","AVG","units","PERCENTILE"]]
+RANK = RANK[["DATE","SDP","FUKEN","NAME","GFS","AVG","units","PERCENTILE"]]
 RANK.to_csv(OUT_PATH +"/"+ "gfs_rank.csv",encoding=ENCODE)
 
 #sys.exit(0)
 ##################################################
+"""
 ## 集約ランキングの保存
 SCORE = "SCORE"
 RANK = RANK.rename(columns={"NAME":SCORE})
@@ -140,6 +144,7 @@ dRANK = dRANK.reset_index()
 dRANK = dRANK[["DATE","SCORE","SDP","GFS"]]
 dRANK = dRANK.rename(columns={"SDP":"#SDP","GFS":"#GFS"})
 dRANK.to_csv(OUT_PATH +"/"+ "day_rank.csv",encoding=ENCODE)
+"""
 
 ##################################################
 print("leave:", sys.argv)

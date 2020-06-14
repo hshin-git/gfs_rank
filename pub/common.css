@@ -44,9 +44,11 @@ div#chartFoot { position:relative; z-index: 1; margin-top: 0%; }
 /***** table.html *****/
 img#tenki { width: 24px; height: 24px; }
 .dataframe a { text-decoration:none; color:var(--link-fg); }
-.dataframe td { white-space: nowrap; border-bottom: 1px solid var(--line-fg); }
-.dataframe table { border: 1 }
+.dataframe td { white-space:nowrap; }
+.dataframe thead th { width: 100%; }
+.dataframe tbody th { width: 100%; }
 /* 行ヘッダの固定 */
+/*
 .dataframe thead th {
   text-align: center; 
   position: -webkit-sticky;
@@ -55,7 +57,9 @@ img#tenki { width: 24px; height: 24px; }
   z-index: 2;
   background-color: var(--button-bg); color: var(--button-fg);
 }
+*/
 /* 列ヘッダの固定 */
+/*
 .dataframe tbody th {
   position: -webkit-sticky;
   position: sticky;
@@ -63,4 +67,5 @@ img#tenki { width: 24px; height: 24px; }
   z-index: 1;
   background-color: var(--button-bg); color: var(--button-fg);
 }
+*/
 
