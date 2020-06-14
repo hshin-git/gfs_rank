@@ -20,10 +20,12 @@
 
 
 /***** index.html *****/
-body { text-align:center; height:100%; background:var(--text-bg); color:var(--text-fg); }
+body { text-align:center; height:100%;
+ /*background:var(--text-bg); color:var(--text-fg);*/
+}
 button {
  border-style:none; font-weight:bold; width:100px; border-radius:8px;
- background-color:var(--button-bg); color:var(--button-fg);
+ /*background-color:var(--button-bg); color:var(--button-fg);*/
 }
 hr { color:var(--button-bg); }
 .tabBody iframe { width:100%; border:0; }

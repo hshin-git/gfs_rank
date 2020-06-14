@@ -30,8 +30,10 @@ os.makedirs(OUT_PATH, exist_ok=True)
 ## 気象変数の単位
 GFS_LIST = pd.read_csv(COM.INFO_PATH +"/"+ "gfs_list.csv",index_col="GFS")
 UNITS = {}
+ABBREVIATION = {}
 for v in GFS_LIST.index:
   UNITS[v] = GFS_LIST.loc[v,"units"]
+  ABBREVIATION[v] = GFS_LIST.loc[v,"abbreviation"]
 
 
 ##################################################
@@ -70,7 +72,7 @@ for v in STAT.columns[1:]:
 
 ##################################################
 ## ランキングの計算処理
-RANK = pd.DataFrame([],columns=["SDP","FUKEN","NAME","DATE","GFS","PERCENTILE","LOG10KDE","AVG"])
+RANK = pd.DataFrame([],columns=["SDP","FUKEN","NAME","DATE","GFS","PCTL","LOGP","MEAN"])
 
 ## ランク計算パラメータ
 P01,P99,KDE,EPS = 1.,99.,1e-4,1e-300
@@ -82,7 +84,7 @@ for SDP in SDP_LIST.index[:]:
   ##################################################
   ## 予報値
   DATA = pd.read_csv("%s/%05d.csv"%(DATA_PATH,SDP),parse_dates=[0],index_col=0)
-  DATA = DATA[:-(len(DATA)%8)]	# 1日8コマに整列
+  DATA = DATA[1:]	# 1日8コマに整列（開始21時を捨てる）
   DATA = DATA.resample("1D").mean()
   for v in DATA.columns[1:]:
     if not(v in STAT.columns[1:]): continue
@@ -108,8 +110,9 @@ RANK = RANK[[v in list(VARS.index) for v in RANK.GFS]]
 
 ## 事象リストの保存
 RANK["units"] = RANK.apply(lambda x: UNITS[x["GFS"][:-3]],axis=1)
+RANK["abbreviation"] = RANK.apply(lambda x: ABBREVIATION[x["GFS"][:-3]],axis=1)
 RANK = RANK.sort_values(["DATE","SDP","GFS"])
-RANK = RANK[["DATE","SDP","FUKEN","NAME","GFS","AVG","units","PERCENTILE"]]
+RANK = RANK[["DATE","SDP","FUKEN","NAME","abbreviation","MEAN","units","PCTL","GFS"]]
 RANK.to_csv(OUT_PATH +"/"+ "gfs_rank.csv",encoding=ENCODE)
 
 #sys.exit(0)

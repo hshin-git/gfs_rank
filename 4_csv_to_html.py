@@ -30,7 +30,6 @@ HEADER = '''
 '''
 
 FOOTER = '''
-<p>This document was created at JST {0:%Y-%d-%m %H:%M:%S}.</p>
 </body>
 </html>
 '''
@@ -106,10 +105,10 @@ for src in CSV_LIST:
 		render_links=True,
 		escape=False,
 		index=False,
-		show_dimensions=True,
+		show_dimensions=False,
 		classes="compact row-border stripe",
 		border=0)
-  html += FOOTER.format(datetime.now())
+  html += FOOTER
   ## write html
   with open(dst,'w') as f:
     f.write(html)
