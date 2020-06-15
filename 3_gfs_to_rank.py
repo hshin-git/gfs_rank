@@ -31,9 +31,11 @@ os.makedirs(OUT_PATH, exist_ok=True)
 GFS_LIST = pd.read_csv(COM.INFO_PATH +"/"+ "gfs_list.csv",index_col="GFS")
 UNITS = {}
 ABBREVIATION = {}
+LONG_NAME = {}
 for v in GFS_LIST.index:
   UNITS[v] = GFS_LIST.loc[v,"units"]
   ABBREVIATION[v] = GFS_LIST.loc[v,"abbreviation"]
+  LONG_NAME[v] = GFS_LIST.loc[v,"long_name"]
 
 
 ##################################################
@@ -111,8 +113,9 @@ RANK = RANK[[v in list(VARS.index) for v in RANK.GFS]]
 ## 事象リストの保存
 RANK["units"] = RANK.apply(lambda x: UNITS[x["GFS"][:-3]],axis=1)
 RANK["abbreviation"] = RANK.apply(lambda x: ABBREVIATION[x["GFS"][:-3]],axis=1)
+RANK["long_name"] = RANK.apply(lambda x: LONG_NAME[x["GFS"][:-3]],axis=1)
 RANK = RANK.sort_values(["DATE","SDP","GFS"])
-RANK = RANK[["DATE","SDP","FUKEN","NAME","abbreviation","MEAN","units","PCTL","GFS"]]
+RANK = RANK[["DATE","SDP","FUKEN","NAME","abbreviation","MEAN","units","PCTL","long_name"]]
 RANK.to_csv(OUT_PATH +"/"+ "gfs_rank.csv",encoding=ENCODE)
 
 #sys.exit(0)
