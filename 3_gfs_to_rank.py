@@ -77,7 +77,17 @@ for v in STAT.columns[1:]:
 RANK = pd.DataFrame([],columns=["SDP","FUKEN","NAME","DATE","GFS","PCTL","LOGP","MEAN"])
 
 ## ランク計算パラメータ
-P01,P99,KDE,EPS = 1.,99.,1e-4,1e-300
+P01,P99,KDE,EPS = 1.,99.,1e-2,1e-300
+SKIP = {
+'Pressure_convective_cloud_bottom',
+'Pressure_convective_cloud_top',
+'Pressure_high_cloud_bottom_Mixed_intervals_Average',
+'Pressure_high_cloud_top_Mixed_intervals_Average',
+'Pressure_low_cloud_bottom_Mixed_intervals_Average',
+'Pressure_low_cloud_top_Mixed_intervals_Average',
+'Pressure_middle_cloud_bottom_Mixed_intervals_Average',
+'Pressure_middle_cloud_top_Mixed_intervals_Average',
+}
 
 #SDP_LIST = SDP_LIST[20:25]
 for SDP in SDP_LIST.index[:]:
@@ -90,6 +100,7 @@ for SDP in SDP_LIST.index[:]:
   DATA = DATA.resample("1D").mean()
   for v in DATA.columns[1:]:
     if not(v in STAT.columns[1:]): continue
+    if v[:-3] in SKIP: continue
     VAL = DATA[v]
     # パーセンタイル値のスコア
     PCT = pd.Series(FPCT[v](VAL), index=DATA.index)
