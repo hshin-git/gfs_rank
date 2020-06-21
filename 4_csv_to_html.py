@@ -20,10 +20,12 @@ HEADER = '''
 <head>
 <meta charset="utf-8">
 <title>dataframe</title>
-<link rel="stylesheet" type="text/css" href="../common.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="../common.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.20/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js"></script>
 <script> $(document).ready( function () { $('.dataframe').DataTable({ "scrollX":true, "stateSave":true, "order":[], }); } ); </script>
 </head>
 <body>
@@ -64,7 +66,7 @@ def _SETtoLIST(s): return s.replace("{","").replace("}","").split(",")
 def _MAPandJOIN(fn,ls): return "<br>".join([fn(x) for x in ls])
 def _GFS_HREF(s): return "<a id='{0}' href='./gfs_list.html#{0}'>{0}</a>".format(s)
 def _GFS_HREF2(s): return "<a id='{0}' href='./var_rank.html#{0}'>{0}</a> {1}".format(s,VAR_TEXT[s])
-def _SDP_HREF(s): return "<a href='../graph/{0}.png'>{0}</a>".format(s)
+def _SDP_HREF(s): return "<a href='../graph/{0}.png' data-lightbox='{0}'>{0}</a>".format(s)
 def _JST_PID(s): return "<p id='{0}'>{1}</p>".format(s[:-6].replace("-","").replace(" ",""),s[:-3]) 
 #def _ICONIFY(s): return TENKI_COLOR[s[0]].format(s) if s[0] in TENKI_COLOR else s
 #def _ICONIFY(s): return TENKI_EMOJI[s[0]] if s[0] in TENKI_EMOJI else s
