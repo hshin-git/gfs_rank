@@ -143,9 +143,15 @@ hght_500 = data.variables['Geopotential_height_isobaric'][t, plev.index(500*100)
 # Calculate and smooth 1000-500 hPa thickness
 thickness_1000_500 = gaussian_filter(hght_500 - hght_1000, sigma=SIGMA)
 
-# 降水分布
+# 降水有無
 crain = data.variables['Categorical_Rain_surface'][:]
 crain = gaussian_filter(crain[t], sigma=SIGMA) * 100.
+
+# 降水強度
+prate = data.variables['Precipitation_rate_surface'][:]
+#prate = gaussian_filter(prate[t], sigma=SIGMA/2.) * 3600. 
+prate = prate[t] * 3600. 
+
 #sys.exit(0)
 
 
@@ -194,11 +200,17 @@ for clevthick, color in zip(clevs, colors):
 		linestyles='dashed', transform=dataproj)
     plt.clabel(cs, **kw_clabels)
 
-# Plot CRAIN
+# Plot RAIN
+"""
 clevs_crain = np.arange(20, 101, 20)
 cf = ax.contourf(lons, lats, crain, clevs_crain, cmap=plt.cm.Blues, transform=dataproj, norm=plt.Normalize(0, 150))
 cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
 cb.set_label('Categorical Rain Surface (%)', fontsize=COM.FONTSIZE)
+"""
+clevs_prate = [0.01,1,5,10,20,30,40,50]
+cf = ax.contourf(lons, lats, prate, clevs_prate, cmap=plt.cm.BuPu, transform=dataproj, norm=plt.Normalize(-15, 50))
+cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
+cb.set_label('Precipitation Rate (mm/h)', fontsize=COM.FONTSIZE)
 
 # Plot MSLP
 clevmslp = np.arange(800., 1120., 4)
