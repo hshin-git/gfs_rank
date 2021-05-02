@@ -53,9 +53,9 @@ for SDP in SDP_PLOT:
   DF['DPT'] = DF['Dewpoint_temperature_height_above_ground_00'] - 273.15
   ## 雲量(0-1)
   DF['TCDC'] = DF['Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average_00'] / 100.
-  DF['High'] = DF['Total_cloud_cover_high_cloud_Mixed_intervals_Average_00'] / 100.
-  DF['Middle'] = DF['Total_cloud_cover_middle_cloud_Mixed_intervals_Average_00'] / 100.
-  DF['Low'] = DF['Total_cloud_cover_low_cloud_Mixed_intervals_Average_00'] / 100.
+  #DF['High'] = DF['Total_cloud_cover_high_cloud_Mixed_intervals_Average_00'] / 100.
+  #DF['Middle'] = DF['Total_cloud_cover_middle_cloud_Mixed_intervals_Average_00'] / 100.
+  #DF['Low'] = DF['Total_cloud_cover_low_cloud_Mixed_intervals_Average_00'] / 100.
   ## 天気(0-1)
   DF['CRAIN'] = DF['Categorical_Rain_surface_00']
   DF['CSNOW'] = DF['Categorical_Snow_surface_00']
@@ -112,7 +112,8 @@ for SDP in SDP_PLOT:
   axes[row].set_ylim(0.0,1.05)
   ## 雲量(0-1)
   row = row + 1
-  for c in ['TCDC','High','Middle','Low']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
+  #for c in ['TCDC','High','Middle','Low']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
+  for c in ['TCDC']: DF[c].plot(ax=axes[row],label=c,marker='.',sharex=True)
   axes[row].set_ylabel("Cloud (0-1)")
   axes[row].grid(True)
   axes[row].legend(loc='right')

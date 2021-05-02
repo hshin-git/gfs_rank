@@ -106,7 +106,8 @@ v_wind = v_wind_var[:].squeeze()[t] #* units('m/s')
 # Convert number of hours since the reference time into an actual date
 time = num2date(time_var[:].squeeze(), time_var.units)[t]
 
-lev_850 = np.where(data.variables['isobaric6'][:] == 850*100)[0][0]
+#lev_850 = np.where(data.variables['isobaric6'][:] == 850*100)[0][0]
+lev_850 = np.where(data.variables['isobaric'][:] == 850*100)[0][0]
 hght_850 = hght[lev_850]
 temp_850 = temp[lev_850]
 u_wind_850 = u_wind[lev_850]

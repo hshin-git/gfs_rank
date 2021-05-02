@@ -114,7 +114,8 @@ data =  netCDF4.Dataset(GFS_PATH, 'r')
 # Extract data into variables
 
 # Grab pressure levels
-plev = list(data.variables['isobaric6'][:])
+#plev = list(data.variables['isobaric6'][:])
+plev = list(data.variables['isobaric'][:])
 
 # Grab lat/lons and make all lons 0-360
 """

@@ -86,12 +86,12 @@ uwnd = ds['u-component_of_wind_isobaric']
 vwnd = ds['v-component_of_wind_isobaric']
 
 # Select and grab 500-hPa geopotential heights and wind components, smooth with gaussian_filter
-tmpk_500 = gaussian_filter(tmpk.sel(isobaric6=500*100).data[t], sigma=3.0)
-hght_500 = gaussian_filter(hght.sel(isobaric6=500*100).data[t], sigma=3.0)
+tmpk_500 = gaussian_filter(tmpk.sel(isobaric1=500*100).data[t], sigma=3.0)
+hght_500 = gaussian_filter(hght.sel(isobaric1=500*100).data[t], sigma=3.0)
 #uwnd_500 = gaussian_filter(uwnd.sel(isobaric=500*100).data[t], sigma=3.0) * units('m/s')
 #vwnd_500 = gaussian_filter(vwnd.sel(isobaric=500*100).data[t], sigma=3.0) * units('m/s')
-uwnd_500 = uwnd.sel(isobaric=500*100).data[t] * units('m/s')
-vwnd_500 = vwnd.sel(isobaric=500*100).data[t] * units('m/s')
+uwnd_500 = uwnd.sel(isobaric1=500*100).data[t] * units('m/s')
+vwnd_500 = vwnd.sel(isobaric1=500*100).data[t] * units('m/s')
 
 
 # Use MetPy to calculate the wind speed for colorfill plot, change units to knots from m/s
