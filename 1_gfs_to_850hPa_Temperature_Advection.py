@@ -107,7 +107,7 @@ v_wind = v_wind_var[:].squeeze()[t] #* units('m/s')
 time = num2date(time_var[:].squeeze(), time_var.units)[t]
 
 #lev_850 = np.where(data.variables['isobaric6'][:] == 850*100)[0][0]
-lev_850 = np.where(data.variables['isobaric'][:] == 850*100)[0][0]
+lev_850 = np.where(data.variables['isobaric1'][:] == 850*100)[0][0]
 hght_850 = hght[lev_850]
 temp_850 = temp[lev_850]
 u_wind_850 = u_wind[lev_850]
@@ -234,5 +234,5 @@ plt.subplots_adjust(left=COM.LEFT, right=COM.RIGHT, top=COM.TOP, bottom=COM.BOTT
 plt.savefig(OUT_PATH, transparent=COM.TRANSPARENT) #bbox_inches='tight',pad_inches=COM.PAD_INCHES)
 # Close all
 plt.close(fig)
-data.close()
+#data.close()
 
