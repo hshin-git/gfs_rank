@@ -55,6 +55,11 @@ $DEBUG $PYTHON 4_csv_to_html.py ./info/*.csv
 
 
 echo "##################################################"
+##### GFS変数図の作成: info/gfs_list.csv, gfs/gfs_*.nc -> tile/*.png
+$DEBUG $PYTHON 2_gfs_to_minmax.py $GFS_PATH
+
+
+echo "##################################################"
 ##### GFS天気図の作成: gfs/gfs_*.nc -> chart/*.png
 for t in $(seq 0 1 56)
 do

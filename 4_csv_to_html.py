@@ -64,7 +64,8 @@ TENKI_ICONS = {	#画像（いらすとや）
 def _NORMALIZE(s): return re.sub(r'_[0-9]{2}',"",s.replace("'","").replace("Timestamp(","").replace(" 00:00:00)","").replace(" ",""))
 def _SETtoLIST(s): return s.replace("{","").replace("}","").split(",")
 def _MAPandJOIN(fn,ls): return "<br>".join([fn(x) for x in ls])
-def _GFS_HREF(s): return "<a id='{0}' href='./gfs_list.html#{0}'>{0}</a>".format(s)
+def _GFS_HREF(s): return "<a href='../tile/{0}.png' data-lightbox='{0}'>{0}</a>".format(s)
+def _GFS_HREF1(s): return "<a id='{0}' href='./gfs_list.html#{0}'>{0}</a>".format(s)
 def _GFS_HREF2(s): return "<a id='{0}' href='./var_rank.html#{0}'>{0}</a> {1}".format(s,VAR_TEXT[s])
 def _SDP_HREF(s): return "<a href='../graph/{0}.png' data-lightbox='{0}'>{0}</a>".format(s)
 def _JST_PID(s): return "<p id='{0}'>{1}</p>".format(s[:-6].replace("-","").replace(" ",""),s[:-3]) 
@@ -75,7 +76,8 @@ def _ICONIFY(s): return TENKI_ICONS[s[0]] if s[0] in TENKI_ICONS else s
 ## フォーマット関数
 FORMATTERS = {
   "JST": lambda x: _JST_PID(x),
-  "SDP": lambda x: _SDP_HREF(x), 
+  "SDP": lambda x: _SDP_HREF(x),
+  "GFS": lambda x: _GFS_HREF(x),
 #"GFS": lambda x: _MAPandJOIN(_GFS_HREF,sorted(_SETtoLIST(_NORMALIZE(x)))),
 #"#GFS": lambda x: _MAPandJOIN(_GFS_HREF2,sorted(_SETtoLIST(_NORMALIZE(x)))),
 #"#SDP": lambda x: _MAPandJOIN(_SDP_HREF,sorted(_SETtoLIST(_NORMALIZE(x)))),
