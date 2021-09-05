@@ -208,8 +208,13 @@ cf = ax.contourf(lons, lats, crain, clevs_crain, cmap=plt.cm.Blues, transform=da
 cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
 cb.set_label('Categorical Rain Surface (%)', fontsize=COM.FONTSIZE)
 """
-clevs_prate = [0.01,1,5,10,20,30,40,50]
-cf = ax.contourf(lons, lats, prate, clevs_prate, cmap=plt.cm.BuPu, transform=dataproj, norm=plt.Normalize(-15, 50))
+clevs_prate = [1e-1,1,5,10,20,30,50,80]
+#clevs_ccmap = plt.cm.BuPu
+#clevs_ccmap = plt.cm.jet
+clevs_ccmap = plt.cm.rainbow
+#from matplotlib.colors import ListedColormap
+#clevs_ccmap = ListedColormap(['lavender','lightblue','deepskyblue','royalblue','yellow','orange','red','purple'],name='JMA')
+cf = ax.contourf(lons, lats, prate, clevs_prate, cmap=clevs_ccmap, transform=dataproj, norm=plt.Normalize(-15, 50))
 cb = plt.colorbar(cf, orientation='horizontal', pad=0, aspect=50, shrink=COM.SHRINK)
 cb.set_label('Precipitation Rate (mm/h)', fontsize=COM.FONTSIZE)
 
