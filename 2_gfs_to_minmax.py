@@ -117,7 +117,8 @@ for NAME in sorted(data.variables)[:]:
   print("plot:", JST, ABBR, NAME)
 
   # 表示オプション
-  CMAP = "Blues"
+  #CMAP = "Blues"
+  CMAP = "rainbow"
   
 
   ###########################################
