@@ -32,8 +32,8 @@ os.makedirs(OUT_PATH, exist_ok=True)
 ########################################################
 ## カテゴリ予報
 CRAIN = 'Categorical_Rain_surface_00'
-CSNOW = 'Categorical_Snow_surface_00'
-TCDC = 'Total_cloud_cover_entire_atmosphere_Mixed_intervals_Average_00'
+CSNOW = 'Categorical_Freezing_Rain_surface_00'
+TCDC = 'Total_cloud_cover_boundary_layer_cloud_Mixed_intervals_Average_00'
 REF_COLS = [CRAIN,CSNOW,TCDC]
 ## 天気の判別ルール
 def TENKI(day):
