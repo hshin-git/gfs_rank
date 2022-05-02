@@ -1,9 +1,10 @@
 # gfs_rank
 
+![SurfaceChart](https://user-images.githubusercontent.com/64751855/166199790-f278fb11-c912-4437-b47c-b0cbce68e6f2.png)
+
+
 ## はじめに
 サイト[GFS Rank](http://tenki.cf/gfs/)は、全球予報GFS（水平解像度0.5度）にもとづく天気図とランキングを掲載しています。 それぞれの特徴は「天気図を前後上下ボタンで切り替えられる点」と「気象量の珍しさをランキングする点」です。 コンテンツは、21時JST（12時UTC）初期値のGFSデータにもとづき毎朝に更新します。 
-
-![SurfaceChart](https://user-images.githubusercontent.com/64751855/166199790-f278fb11-c912-4437-b47c-b0cbce68e6f2.png)
 
 
 ## コンテンツ
