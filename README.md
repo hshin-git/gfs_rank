@@ -1,6 +1,6 @@
 # gfs_rank
 
-![Surface_015](https://tenki.cf/gfs/chart/Surface_HILO_Symbol_015.png?latest)
+![Surface_015](https://52.193.72.209/gfs/chart/Surface_HILO_Symbol_015.png?latest)
 
 
 ## 概説
