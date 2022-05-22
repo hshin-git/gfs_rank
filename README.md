@@ -4,7 +4,7 @@
 
 
 ## 概説
-サイト[GFS Rank](http://tenki.cf/gfs/)は、全球予報GFS（水平解像度0.5度）にもとづく天気図とランキングを掲載する。 それぞれの特徴は「天気図を前後上下ボタンで切り替えられる点」と「気象量の珍しさをランキングする点」である。 コンテンツは、21時JST（12時UTC）初期値のGFSデータにもとづき毎朝に更新する。 
+サイト[GFS Rank](http://52.193.72.209/gfs/)は、全球予報GFS（水平解像度0.5度）にもとづく天気図とランキングを掲載する。 それぞれの特徴は「天気図を前後上下ボタンで切り替えられる点」と「気象量の珍しさをランキングする点」である。 コンテンツは、21時JST（12時UTC）初期値のGFSデータにもとづき毎朝に更新する。 
 
 
 ## 内容
@@ -21,7 +21,7 @@
 
 
 ## 参考
-- [GFS Rank](http://tenki.cf/gfs/)
+- [GFS Rank](http://52.193.72.209/gfs/)
 - [Global Forecast System - NOAA](https://data.nodc.noaa.gov/cgi-bin/iso?id=gov.noaa.ncdc:C00634)
 - [MetPy - Unidata](https://unidata.github.io/MetPy/latest/index.html)
 - [Siphon - Unidata](https://unidata.github.io/siphon/latest/index.html)
